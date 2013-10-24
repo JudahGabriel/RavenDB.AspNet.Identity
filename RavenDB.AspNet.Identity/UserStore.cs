@@ -45,8 +45,17 @@ namespace RavenDB.AspNet.Identity
 			if (user == null)
 				throw new ArgumentNullException("user");
 
+			user.Id = UsernameToDocumentId(user.UserName);
 			this.session.Store(user);
 			return Task.FromResult(true);
+		}
+
+		private string UsernameToDocumentId(string userName)
+		{
+			var conventions = session.Advanced.DocumentStore.Conventions;
+			string typeTagName = conventions.GetTypeTagName(typeof (TUser));
+			string tag = conventions.TransformTypeTagNameToDocumentKeyPrefix(typeTagName);
+			return String.Format("{0}{1}{2}", tag, conventions.IdentityPartsSeparator, userName);
 		}
 
 		public Task DeleteAsync(TUser user)
@@ -67,10 +76,8 @@ namespace RavenDB.AspNet.Identity
 
 		public Task<TUser> FindByNameAsync(string userName)
 		{
-			var user = this.session.Query<TUser>()
-				.FirstOrDefault(u => u.UserName == userName);
-
-			return Task.FromResult(user);
+			string userDocId = UsernameToDocumentId(userName);
+			return FindByIdAsync(userDocId);
 		}
 
 		public Task UpdateAsync(TUser user)

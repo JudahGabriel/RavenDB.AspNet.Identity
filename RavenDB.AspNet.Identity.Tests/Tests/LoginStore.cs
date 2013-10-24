@@ -14,10 +14,12 @@ namespace RavenDB.AspNet.Identity.Tests
 	public class LoginStore : BaseTest
 	{
 		[Fact]
-		public void Can_create_user()
+		public void Can_create_user_and_log_in()
 		{
-			string username = "DavidBoike";
+			const string username = "DavidBoike";
 			string password = Guid.NewGuid().ToString("n");
+			const string googleLogin = "http://www.google.com/fake/user/identifier";
+			const string yahooLogin = "http://www.yahoo.com/fake/user/identifier";
 
 			var user = new SimpleAppUser { UserName = username };
 
@@ -32,8 +34,8 @@ namespace RavenDB.AspNet.Identity.Tests
 						Assert.True(result.Succeeded);
 						Assert.NotNull(user.Id);
 
-						var res1 = mgr.AddLogin(user.Id, new UserLoginInfo("Google", "http://www.google.com/fake/user/identifier"));
-						var res2 = mgr.AddLogin(user.Id, new UserLoginInfo("Yahoo", "http://www.yahoo.com/fake/user/identifier"));
+						var res1 = mgr.AddLogin(user.Id, new UserLoginInfo("Google", googleLogin));
+						var res2 = mgr.AddLogin(user.Id, new UserLoginInfo("Yahoo", yahooLogin));
 
 						Assert.True(res1.Succeeded);
 						Assert.True(res2.Succeeded);
@@ -51,8 +53,8 @@ namespace RavenDB.AspNet.Identity.Tests
 					Assert.NotNull(loaded.PasswordHash);
 
 					Assert.Equal(loaded.Logins.Count, 2);
-					Assert.True(loaded.Logins.Any(x => x.LoginProvider == "Google" && x.ProviderKey == "http://www.google.com/fake/user/identifier"));
-					Assert.True(loaded.Logins.Any(x => x.LoginProvider == "Yahoo" && x.ProviderKey == "http://www.yahoo.com/fake/user/identifier"));
+					Assert.True(loaded.Logins.Any(x => x.LoginProvider == "Google" && x.ProviderKey == googleLogin));
+					Assert.True(loaded.Logins.Any(x => x.LoginProvider == "Yahoo" && x.ProviderKey == yahooLogin));
 
 					var loadedLogins = session.Advanced.LoadStartingWith<IdentityUserLogin>("IdentityUserLogins/");
 					Assert.Equal(loadedLogins.Length, 2);
@@ -64,6 +66,27 @@ namespace RavenDB.AspNet.Identity.Tests
 						Assert.Equal(login.ProviderKey, loginDoc.ProviderKey);
 						Assert.Equal(user.Id, loginDoc.UserId);
 					}
+				}
+
+				using (var session = docStore.OpenSession())
+				{
+					using (var mgr = new UserManager<SimpleAppUser>(new UserStore<SimpleAppUser>(session)))
+					{
+						var userByName = mgr.Find(username, password);
+						var userByGoogle = mgr.Find(new UserLoginInfo("Google", googleLogin));
+						var userByYahoo = mgr.Find(new UserLoginInfo("Yahoo", yahooLogin));
+
+						Assert.NotNull(userByName);
+						Assert.NotNull(userByGoogle);
+						Assert.NotNull(userByYahoo);
+
+						Assert.Equal(userByName.UserName, username);
+
+						// The Session cache should return the very same objects
+						Assert.Same(userByName, userByGoogle);
+						Assert.Same(userByName, userByYahoo);
+					}
+					session.SaveChanges();
 				}
 			}
 		}
