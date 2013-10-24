@@ -34,6 +34,11 @@ namespace RavenDB.AspNet.Identity
 			this.getSessionFunc = getSession;
 		}
 
+		public UserStore(IDocumentSession session)
+		{
+			this._session = session;
+		}
+
 		public Task CreateAsync(TUser user)
 		{
 			this.ThrowIfDisposed();
@@ -100,7 +105,7 @@ namespace RavenDB.AspNet.Identity
 
 				this.session.Store(new IdentityUserLogin
 				{
-					Id = GetLoginId(login),
+					Id = Util.GetLoginId(login),
 					UserId = user.Id,
 					Provider = login.LoginProvider,
 					ProviderKey = login.ProviderKey
@@ -110,19 +115,9 @@ namespace RavenDB.AspNet.Identity
 			return Task.FromResult(true);
 		}
 
-		private string GetLoginId(UserLoginInfo login)
-		{
-			using (var sha = new SHA1CryptoServiceProvider())
-			{
-				byte[] clearBytes = Encoding.UTF8.GetBytes(login.LoginProvider + "|" + login.ProviderKey);
-				byte[] hashBytes = sha.ComputeHash(clearBytes);
-				return "IdentityUserLogins/" + Util.ToHex(hashBytes);
-			}
-		}
-
 		public Task<TUser> FindAsync(UserLoginInfo login)
 		{
-			string loginId = GetLoginId(login);
+			string loginId = Util.GetLoginId(login);
 
 			var loginDoc = session.Include<IdentityUserLogin>(x => x.UserId)
 				.Load(loginId);
@@ -150,7 +145,7 @@ namespace RavenDB.AspNet.Identity
 			if (user == null)
 				throw new ArgumentNullException("user");
 
-			string loginId = GetLoginId(login);
+			string loginId = Util.GetLoginId(login);
 			var loginDoc = this.session.Load<IdentityUserLogin>(loginId);
 			if (loginDoc != null)
 				this.session.Delete(loginDoc);

@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNet.Identity;
 
 namespace RavenDB.AspNet.Identity
 {
 	internal static class Util
 	{
-		public static string ToHex(byte[] bytes)
+		internal static string ToHex(byte[] bytes)
 		{
 			StringBuilder sb = new StringBuilder(bytes.Length*2);
 			for (int i = 0; i < bytes.Length; i++)
@@ -15,7 +17,7 @@ namespace RavenDB.AspNet.Identity
 			return sb.ToString();
 		}
 
-		public static byte[] FromHex(string hex)
+		internal static byte[] FromHex(string hex)
 		{
 			if (hex == null)
 				throw new ArgumentNullException("hex");
@@ -30,9 +32,19 @@ namespace RavenDB.AspNet.Identity
 			return bytes;
 		}
 
-		public static IList<T> ToIList<T>(this IEnumerable<T> enumerable)
+		internal static IList<T> ToIList<T>(this IEnumerable<T> enumerable)
 		{
 			return enumerable.ToList();
+		}
+
+		internal static string GetLoginId(UserLoginInfo login)
+		{
+			using (var sha = new SHA1CryptoServiceProvider())
+			{
+				byte[] clearBytes = Encoding.UTF8.GetBytes(login.LoginProvider + "|" + login.ProviderKey);
+				byte[] hashBytes = sha.ComputeHash(clearBytes);
+				return "IdentityUserLogins/" + Util.ToHex(hashBytes);
+			}
 		}
 	}
 }
