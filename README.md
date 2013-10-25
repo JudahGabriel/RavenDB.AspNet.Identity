@@ -26,9 +26,9 @@ These instructions assume you know how to set up RavenDB within an MVC applicati
 2. Remove the Entity Framework packages and replace with RavenDB Identity:
 
 ```PowerShell
-    Uninstall-Package Microsoft.AspNet.Identity.EntityFramework
-    Uninstall-Package EntityFramework
-    Install-Package RavenDB.AspNet.Identity
+Uninstall-Package Microsoft.AspNet.Identity.EntityFramework
+Uninstall-Package EntityFramework
+Install-Package RavenDB.AspNet.Identity
 ```
     
 3. In ~/Models/IdentityModels.cs:
@@ -40,9 +40,10 @@ These instructions assume you know how to set up RavenDB within an MVC applicati
     * Replace the UserStore in the constructor, providing a lambda expression to show the UserStore how to get the current IDocumentSession.
 
 ```C#
-    // This example assumes you have a RavenController base class with public RavenSession property.
-    public AccountController()
-    {
-        this.UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(() => this.RavenSession));
-    }
+// This example assumes you have a RavenController base class with public RavenSession property.
+public AccountController()
+{
+    this.UserManager = new UserManager<ApplicationUser>(
+        new UserStore<ApplicationUser>(() => this.RavenSession));
+}
 ```
