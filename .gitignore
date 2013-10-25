@@ -17,6 +17,7 @@ build/
 
 #Ignore NuGet packages, use NuGet Package Restore instead
 packages/*
+*.nupkg
 
 # Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
 !packages/*/build/
@@ -97,10 +98,6 @@ publish/
 
 # Publish Web Output
 *.Publish.xml
-
-# NuGet Packages Directory
-## TODO: If you have NuGet Package Restore enabled, uncomment the next line
-#packages/
 
 # Windows Azure Build Output
 csx
