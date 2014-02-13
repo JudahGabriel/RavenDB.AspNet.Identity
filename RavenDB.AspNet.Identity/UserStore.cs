@@ -23,9 +23,13 @@ namespace RavenDB.AspNet.Identity
 		{
 			get
 			{
-				if (_session == null)
-					_session = getSessionFunc();
-				return _session;
+                if (_session == null)
+                {
+                    _session = getSessionFunc();
+                    _session.Advanced.DocumentStore.Conventions.RegisterIdConvention<IdentityUser>((dbname, commands, user) => "IdentityUsers/" + user.Id);
+                    //_session.Advanced.DocumentStore.Conventions.RegisterIdConvention<IdentityUserByUserName>((dbname, commands, user) => "IdentityUserByUserName/" + user.UserName);
+                }
+                return _session;
 			}
 		}
 
@@ -39,23 +43,21 @@ namespace RavenDB.AspNet.Identity
 			this._session = session;
 		}
 
-		public Task CreateAsync(TUser user)
+        public Task CreateAsync(TUser user)
 		{
 			this.ThrowIfDisposed();
 			if (user == null)
 				throw new ArgumentNullException("user");
+            if (string.IsNullOrEmpty(user.Id))
+                throw new InvalidOperationException("user.Id property must be specified before calling CreateAsync");
 
-			user.Id = UsernameToDocumentId(user.UserName);
 			this.session.Store(user);
-			return Task.FromResult(true);
-		}
 
-		private string UsernameToDocumentId(string userName)
-		{
-			var conventions = session.Advanced.DocumentStore.Conventions;
-			string typeTagName = conventions.GetTypeTagName(typeof (TUser));
-			string tag = conventions.TransformTypeTagNameToDocumentKeyPrefix(typeTagName);
-			return String.Format("{0}{1}{2}", tag, conventions.IdentityPartsSeparator, userName);
+            // This model allows us to lookup a user by name in order to get the id
+            var userByName = new IdentityUserByUserName(user.Id, user.UserName);
+            this.session.Store(userByName, Util.GetIdentityUserByUserNameId(user.UserName));
+
+			return Task.FromResult(true);
 		}
 
 		public Task DeleteAsync(TUser user)
@@ -63,6 +65,10 @@ namespace RavenDB.AspNet.Identity
 			this.ThrowIfDisposed();
 			if (user == null)
 				throw new ArgumentNullException("user");
+
+            var userByName = this.session.Load<IdentityUserByUserName>(Util.GetIdentityUserByUserNameId(user.UserName));
+            if (userByName != null)
+                this.session.Delete(userByName);
 
 			this.session.Delete(user);
 			return Task.FromResult(true);
@@ -76,8 +82,11 @@ namespace RavenDB.AspNet.Identity
 
 		public Task<TUser> FindByNameAsync(string userName)
 		{
-			string userDocId = UsernameToDocumentId(userName);
-			return FindByIdAsync(userDocId);
+            var userByName = this.session.Load<IdentityUserByUserName>(Util.GetIdentityUserByUserNameId(userName));
+            if (userByName == null)
+                return Task.FromResult(default(TUser));
+
+		    return FindByIdAsync(userByName.UserId);
 		}
 
 		public Task UpdateAsync(TUser user)

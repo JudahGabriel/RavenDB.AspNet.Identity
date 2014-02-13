@@ -24,9 +24,10 @@ namespace RavenDB.AspNet.Identity
 			this.Logins = new List<UserLoginInfo>();
 		}
 
-		public IdentityUser(string userName)
+		public IdentityUser(string userId, string userName)
 			: this()
 		{
+            this.Id = userId;
 			this.UserName = userName;
 		}
 	}
@@ -44,4 +45,16 @@ namespace RavenDB.AspNet.Identity
 		public virtual string ClaimType { get; set; }
 		public virtual string ClaimValue { get; set; }
 	}
+
+    public sealed class IdentityUserByUserName
+    {
+        public string UserId { get; set; }
+        public string UserName { get; set; }
+
+        public IdentityUserByUserName(string userId, string userName)
+        {
+            UserId = userId;
+            UserName = userName;
+        }
+    }
 }
