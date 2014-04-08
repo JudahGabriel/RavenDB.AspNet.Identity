@@ -17,11 +17,12 @@ namespace RavenDB.AspNet.Identity.Tests
 		public void Can_create_user_and_log_in()
 		{
 			const string username = "DavidBoike";
+            const string userId = "user_id_1";
 			string password = Guid.NewGuid().ToString("n");
 			const string googleLogin = "http://www.google.com/fake/user/identifier";
 			const string yahooLogin = "http://www.yahoo.com/fake/user/identifier";
 
-			var user = new SimpleAppUser { UserName = username };
+			var user = new SimpleAppUser { Id = userId, UserName = username };
 
 			using (var docStore = NewDocStore())
 			{
@@ -80,7 +81,8 @@ namespace RavenDB.AspNet.Identity.Tests
 						Assert.NotNull(userByGoogle);
 						Assert.NotNull(userByYahoo);
 
-						Assert.Equal(userByName.UserName, username);
+						Assert.Equal(userByName.Id, userId);
+                        Assert.Equal(userByName.UserName, username);
 
 						// The Session cache should return the very same objects
 						Assert.Same(userByName, userByGoogle);

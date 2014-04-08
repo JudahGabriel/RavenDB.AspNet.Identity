@@ -46,5 +46,10 @@ namespace RavenDB.AspNet.Identity
 				return "IdentityUserLogins/" + Util.ToHex(hashBytes);
 			}
 		}
+
+	    internal static string GetIdentityUserByUserNameId(string userName)
+	    {
+	        return string.Format("IdentityUserByUserNames/{0}", userName);
+	    }
 	}
 }
