@@ -7,7 +7,7 @@ using RavenDB.AspNet.Identity;
 
 namespace RavenDB.AspNet.Identity.Tests
 {
-	public class SimpleAppUser : IdentityUser
-	{
-	}
+    public class SimpleAppUser : IdentityUser
+    {
+    }
 }

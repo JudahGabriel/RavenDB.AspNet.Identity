@@ -11,34 +11,34 @@ using RavenDB.AspNet.Identity;
 
 namespace RavenDB.AspNet.Identity.Tests
 {
-	public abstract class BaseTest
-	{
-		protected EmbeddableDocumentStore NewDocStore()
-		{
-			var embeddedStore = new EmbeddableDocumentStore
-			{
-				Configuration =
-				{
-					RunInMemory = true,
-					RunInUnreliableYetFastModeThatIsNotSuitableForProduction = true
-				}
-			};
+    public abstract class BaseTest
+    {
+        protected EmbeddableDocumentStore NewDocStore()
+        {
+            var embeddedStore = new EmbeddableDocumentStore
+            {
+                Configuration =
+                {
+                    RunInMemory = true,
+                    RunInUnreliableYetFastModeThatIsNotSuitableForProduction = true
+                }
+            };
 
-			embeddedStore.Initialize();
+            embeddedStore.Initialize();
 
-			new RavenDocumentsByEntityName().Execute(embeddedStore);
+            new RavenDocumentsByEntityName().Execute(embeddedStore);
 
-			return embeddedStore;
-		}
+            return embeddedStore;
+        }
 
-		protected UserStore<TUser> NewUserStore<TUser>(IDocumentStore docStore) where TUser : IdentityUser
-		{
-			return new UserStore<TUser>(docStore.OpenSession);
-		}
+        protected UserStore<TUser> NewUserStore<TUser>(IDocumentStore docStore) where TUser : IdentityUser
+        {
+            return new UserStore<TUser>(docStore.OpenSession);
+        }
 
-		protected UserManager<TUser> NewUserManager<TUser>(IDocumentStore docStore) where TUser : IdentityUser
-		{
-			return new UserManager<TUser>(new UserStore<TUser>(docStore.OpenSession));
-		}
-	}
+        protected UserManager<TUser> NewUserManager<TUser>(IDocumentStore docStore) where TUser : IdentityUser
+        {
+            return new UserManager<TUser>(new UserStore<TUser>(docStore.OpenSession));
+        }
+    }
 }
