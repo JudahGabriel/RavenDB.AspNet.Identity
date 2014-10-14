@@ -13,7 +13,7 @@ namespace RavenDB.AspNet.Identity
 {
     public class UserStore<TUser> : IUserStore<TUser>, IUserLoginStore<TUser>, IUserClaimStore<TUser>, IUserRoleStore<TUser>,
         IUserPasswordStore<TUser>, IUserSecurityStampStore<TUser>, IUserEmailStore<TUser>, IUserLockoutStore<TUser, string>,
-        IUserTwoFactorStore<TUser, string>
+        IUserTwoFactorStore<TUser, string>, IUserPhoneNumberStore<TUser>
         where TUser : IdentityUser
     {
         private bool _disposed;
@@ -321,7 +321,7 @@ namespace RavenDB.AspNet.Identity
             if (user == null)
                 throw new ArgumentNullException("user");
 
-            return Task.FromResult(user.IsConfirmed);
+            return Task.FromResult(user.IsEmailConfirmed);
         }
 
         public Task SetEmailAsync(TUser user, string email)
@@ -341,7 +341,7 @@ namespace RavenDB.AspNet.Identity
             if (user == null)
                 throw new ArgumentNullException("user");
 
-            user.IsConfirmed = confirmed;
+            user.IsEmailConfirmed = confirmed;
 
             return Task.FromResult(0);
         }
@@ -433,6 +433,46 @@ namespace RavenDB.AspNet.Identity
                 throw new ArgumentNullException("user");
 
             user.TwoFactorAuthEnabled = enabled;
+
+            return Task.FromResult(0);
+        }
+
+        public Task<string> GetPhoneNumberAsync(TUser user)
+        {
+            this.ThrowIfDisposed();
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            return Task.FromResult(user.PhoneNumber);
+        }
+
+        public Task<bool> GetPhoneNumberConfirmedAsync(TUser user)
+        {
+            this.ThrowIfDisposed();
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            return Task.FromResult(user.IsPhoneNumberConfirmed);
+        }
+
+        public Task SetPhoneNumberAsync(TUser user, string phoneNumber)
+        {
+            this.ThrowIfDisposed();
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            user.PhoneNumber = phoneNumber;
+
+            return Task.FromResult(0);
+        }
+
+        public Task SetPhoneNumberConfirmedAsync(TUser user, bool confirmed)
+        {
+            this.ThrowIfDisposed();
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            user.IsPhoneNumberConfirmed = confirmed;
 
             return Task.FromResult(0);
         }
