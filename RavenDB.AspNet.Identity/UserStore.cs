@@ -12,7 +12,8 @@ using Raven.Client;
 namespace RavenDB.AspNet.Identity
 {
     public class UserStore<TUser> : IUserStore<TUser>, IUserLoginStore<TUser>, IUserClaimStore<TUser>, IUserRoleStore<TUser>,
-        IUserPasswordStore<TUser>, IUserSecurityStampStore<TUser>
+        IUserPasswordStore<TUser>, IUserSecurityStampStore<TUser>, IUserEmailStore<TUser>, IUserLockoutStore<TUser, string>,
+        IUserTwoFactorStore<TUser, string>, IUserPhoneNumberStore<TUser>
         where TUser : IdentityUser
     {
         private bool _disposed;
@@ -291,6 +292,187 @@ namespace RavenDB.AspNet.Identity
                 throw new ArgumentNullException("user");
 
             user.Roles.RemoveAll(r => String.Equals(r, role, StringComparison.InvariantCultureIgnoreCase));
+
+            return Task.FromResult(0);
+        }
+
+        public Task<TUser> FindByEmailAsync(string email)
+        {
+            this.ThrowIfDisposed();
+            if (email == null)
+                throw new ArgumentNullException("email");
+
+            var result = this.session.Query<TUser>().Where(u => u.Email == email).FirstOrDefault();
+            return Task.FromResult(result);
+        }
+
+        public Task<string> GetEmailAsync(TUser user)
+        {
+            this.ThrowIfDisposed();
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            return Task.FromResult(user.Email);
+        }
+
+        public Task<bool> GetEmailConfirmedAsync(TUser user)
+        {
+            this.ThrowIfDisposed();
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            return Task.FromResult(user.IsEmailConfirmed);
+        }
+
+        public Task SetEmailAsync(TUser user, string email)
+        {
+            this.ThrowIfDisposed();
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            user.Email = email;
+
+            return Task.FromResult(0);
+        }
+
+        public Task SetEmailConfirmedAsync(TUser user, bool confirmed)
+        {
+            this.ThrowIfDisposed();
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            user.IsEmailConfirmed = confirmed;
+
+            return Task.FromResult(0);
+        }
+
+        public Task<int> GetAccessFailedCountAsync(TUser user)
+        {
+            this.ThrowIfDisposed();
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            return Task.FromResult(user.AccessFailedCount);
+        }
+
+        public Task<bool> GetLockoutEnabledAsync(TUser user)
+        {
+            this.ThrowIfDisposed();
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            return Task.FromResult(user.LockoutEnabled);
+        }
+
+        public Task<DateTimeOffset> GetLockoutEndDateAsync(TUser user)
+        {
+            this.ThrowIfDisposed();
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            return Task.FromResult(user.LockoutEndDate);
+        }
+
+        public Task<int> IncrementAccessFailedCountAsync(TUser user)
+        {
+            this.ThrowIfDisposed();
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            user.AccessFailedCount++;
+
+            return Task.FromResult(user.AccessFailedCount);
+        }
+
+        public Task ResetAccessFailedCountAsync(TUser user)
+        {
+            this.ThrowIfDisposed();
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            user.AccessFailedCount = 0;
+
+            return Task.FromResult(0);
+        }
+
+        public Task SetLockoutEnabledAsync(TUser user, bool enabled)
+        {
+            this.ThrowIfDisposed();
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            user.LockoutEnabled = enabled;
+
+            return Task.FromResult(0);
+        }
+
+        public Task SetLockoutEndDateAsync(TUser user, DateTimeOffset lockoutEnd)
+        {
+            this.ThrowIfDisposed();
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            user.LockoutEndDate = lockoutEnd;
+
+            return Task.FromResult(0);
+        }
+
+        public Task<bool> GetTwoFactorEnabledAsync(TUser user)
+        {
+            this.ThrowIfDisposed();
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            return Task.FromResult(user.TwoFactorAuthEnabled);
+        }
+
+        public Task SetTwoFactorEnabledAsync(TUser user, bool enabled)
+        {
+            this.ThrowIfDisposed();
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            user.TwoFactorAuthEnabled = enabled;
+
+            return Task.FromResult(0);
+        }
+
+        public Task<string> GetPhoneNumberAsync(TUser user)
+        {
+            this.ThrowIfDisposed();
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            return Task.FromResult(user.PhoneNumber);
+        }
+
+        public Task<bool> GetPhoneNumberConfirmedAsync(TUser user)
+        {
+            this.ThrowIfDisposed();
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            return Task.FromResult(user.IsPhoneNumberConfirmed);
+        }
+
+        public Task SetPhoneNumberAsync(TUser user, string phoneNumber)
+        {
+            this.ThrowIfDisposed();
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            user.PhoneNumber = phoneNumber;
+
+            return Task.FromResult(0);
+        }
+
+        public Task SetPhoneNumberConfirmedAsync(TUser user, bool confirmed)
+        {
+            this.ThrowIfDisposed();
+            if (user == null)
+                throw new ArgumentNullException("user");
+
+            user.IsPhoneNumberConfirmed = confirmed;
 
             return Task.FromResult(0);
         }
