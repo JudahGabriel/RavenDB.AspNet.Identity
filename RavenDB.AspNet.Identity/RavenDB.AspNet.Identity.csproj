@@ -33,13 +33,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.AspNet.Identity.Core">
-      <HintPath>..\..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+      <HintPath>C:\Windows\Microsoft.NET\Framework\v4.0.30319\Temporary ASP.NET Files\root\d8f5484c\469c1300\assembly\dl3\f9f49aec\81fd0c30_10f6cf01\Microsoft.AspNet.Identity.Core.DLL</HintPath>
     </Reference>
     <Reference Include="Raven.Abstractions">
-      <HintPath>..\..\packages\RavenDB.Client.2.5.2935\lib\net45\Raven.Abstractions.dll</HintPath>
+      <HintPath>C:\Windows\Microsoft.NET\Framework\v4.0.30319\Temporary ASP.NET Files\root\d8f5484c\469c1300\assembly\dl3\e0fd7473\f88d45f7_15f6cf01\Raven.Abstractions.DLL</HintPath>
     </Reference>
     <Reference Include="Raven.Client.Lightweight">
-      <HintPath>..\..\packages\RavenDB.Client.2.5.2935\lib\net45\Raven.Client.Lightweight.dll</HintPath>
+      <HintPath>C:\Windows\Microsoft.NET\Framework\v4.0.30319\Temporary ASP.NET Files\root\d8f5484c\469c1300\assembly\dl3\b8400ffb\2a0346f7_15f6cf01\Raven.Client.Lightweight.DLL</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />

@@ -19,6 +19,7 @@ namespace RavenDB.AspNet.Identity
         private bool _disposed;
         private Func<IDocumentSession> getSessionFunc;
         private IDocumentSession _session;
+        private bool _custom = true;
 
         private IDocumentSession session
         {
@@ -27,10 +28,16 @@ namespace RavenDB.AspNet.Identity
                 if (_session == null)
                 {
                     _session = getSessionFunc();
-                    _session.Advanced.DocumentStore.Conventions.RegisterIdConvention<IdentityUser>((dbname, commands, user) => "IdentityUsers/" + user.Id);
+                    if (UseCustomId)
+                        _session.Advanced.DocumentStore.Conventions.RegisterIdConvention<IdentityUser>((dbname, commands, user) => "IdentityUsers/" + user.Id);
                 }
                 return _session;
             }
+        }
+        public bool UseCustomId
+        {
+            set { _custom = value; }
+            private get { return _custom; }
         }
 
         public UserStore(Func<IDocumentSession> getSession)
@@ -48,7 +55,7 @@ namespace RavenDB.AspNet.Identity
             this.ThrowIfDisposed();
             if (user == null)
                 throw new ArgumentNullException("user");
-            if (string.IsNullOrEmpty(user.Id))
+            if (string.IsNullOrEmpty(user.Id) && UseCustomId)
                 throw new InvalidOperationException("user.Id property must be specified before calling CreateAsync");
 
             this.session.Store(user);
