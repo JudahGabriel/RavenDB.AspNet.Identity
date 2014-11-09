@@ -15,17 +15,17 @@ namespace RavenDB.AspNet.Identity.Tests
     {
         protected EmbeddableDocumentStore NewDocStore()
         {
+            Raven.Database.Server.NonAdminHttp.EnsureCanListenToWhenInNonAdminContext(8080, false);
             var embeddedStore = new EmbeddableDocumentStore
             {
                 Configuration =
                 {
                     RunInMemory = true,
-                    RunInUnreliableYetFastModeThatIsNotSuitableForProduction = true
+                    //RunInUnreliableYetFastModeThatIsNotSuitableForProduction = true
                 }
             };
-
+            embeddedStore.UseEmbeddedHttpServer = true;
             embeddedStore.Initialize();
-
             new RavenDocumentsByEntityName().Execute(embeddedStore);
 
             return embeddedStore;

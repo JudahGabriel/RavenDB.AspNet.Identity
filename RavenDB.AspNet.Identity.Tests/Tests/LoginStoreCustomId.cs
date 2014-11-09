@@ -11,10 +11,10 @@ using Util = RavenDB.AspNet.Identity.Util;
 
 namespace RavenDB.AspNet.Identity.Tests
 {
-    public class LoginStore : BaseTest
+    public class LoginStoreCustomId : BaseTest
     {
         [Fact]
-        public void Can_create_user_and_log_in()
+        public void Can_create_user_and_log_in_with_customid()
         {
             const string username = "DavidBoike";
             const string userId = "user_id_1";
@@ -22,14 +22,14 @@ namespace RavenDB.AspNet.Identity.Tests
             const string googleLogin = "http://www.google.com/fake/user/identifier";
             const string yahooLogin = "http://www.yahoo.com/fake/user/identifier";
 
-            var user = new SimpleAppUser { UserName = username };
+            var user = new SimpleAppUser { Id = userId, UserName = username };
 
             using (var docStore = NewDocStore())
             {
                 using (var session = docStore.OpenSession())
                 {
                     var ustore = new UserStore<SimpleAppUser>(session);
-                    ustore.UseCustomId = false; 
+                    ustore.UseCustomId = true; 
                     using (var mgr = new UserManager<SimpleAppUser>(ustore))
                     {
                         IdentityResult result = mgr.Create(user, password);
@@ -73,9 +73,7 @@ namespace RavenDB.AspNet.Identity.Tests
 
                 using (var session = docStore.OpenSession())
                 {
-                    var ustore = new UserStore<SimpleAppUser>(session);
-                    ustore.UseCustomId = false;
-                    using (var mgr = new UserManager<SimpleAppUser>(ustore))
+                    using (var mgr = new UserManager<SimpleAppUser>(new UserStore<SimpleAppUser>(session)))
                     {
                         var userByName = mgr.Find(username, password);
                         var userByGoogle = mgr.Find(new UserLoginInfo("Google", googleLogin));
@@ -85,7 +83,7 @@ namespace RavenDB.AspNet.Identity.Tests
                         Assert.NotNull(userByGoogle);
                         Assert.NotNull(userByYahoo);
 
-                        Assert.NotEqual(userByName.Id, userId);
+                        Assert.Equal(userByName.Id, userId);
                         Assert.Equal(userByName.UserName, username);
 
                         // The Session cache should return the very same objects
