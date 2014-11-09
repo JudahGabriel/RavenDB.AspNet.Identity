@@ -19,7 +19,7 @@ namespace RavenDB.AspNet.Identity
         private bool _disposed;
         private Func<IDocumentSession> getSessionFunc;
         private IDocumentSession _session;
-        private bool _custom = true;
+        bool _custom = Settings.UseCustomId;
 
         private IDocumentSession session
         {
