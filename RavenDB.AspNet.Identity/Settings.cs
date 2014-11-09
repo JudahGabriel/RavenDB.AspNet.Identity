@@ -9,11 +9,11 @@ namespace RavenDB.AspNet.Identity
 
         public static bool UseCustomId
         {
-            get { return Settings.UseCustomId; }
+            get { return AuthSettings.UseCustomId; }
         }
 
         #region Private Properties
-        static Configuration ODISettings
+        static Configuration AuthSettings
         {
             get
             {
@@ -31,7 +31,7 @@ namespace RavenDB.AspNet.Identity
         /// <returns>Returns an instance of the <see cref="Configuration"/>.</returns>
         public static Configuration LoadSettings()
         {
-            return (Configuration)ConfigurationManager.GetSection("ravenIdentity");
+            return (Configuration)ConfigurationManager.GetSection("authSettings");
         }
         #endregion
     }
