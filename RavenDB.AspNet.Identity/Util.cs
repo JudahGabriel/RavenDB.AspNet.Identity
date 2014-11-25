@@ -4,6 +4,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNet.Identity;
+using Raven.Client.Indexes;
+using Raven.Client;
 
 namespace RavenDB.AspNet.Identity
 {
@@ -50,6 +52,18 @@ namespace RavenDB.AspNet.Identity
         internal static string GetIdentityUserByUserNameId(string userName)
         {
             return string.Format("IdentityUserByUserNames/{0}", userName);
+        }
+        internal static void TryCreatingIndexes<TUser>(IDocumentStore store)
+            where TUser: IdentityUser
+        {
+            try
+            {
+                IndexCreation.CreateIndexes(typeof(UserByUserNameIndex<TUser>).Assembly, store);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
     }
 }

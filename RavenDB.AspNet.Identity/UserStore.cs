@@ -28,6 +28,7 @@ namespace RavenDB.AspNet.Identity
                 if (_session == null)
                 {
                     _session = getSessionFunc();
+                    Util.TryCreatingIndexes<TUser>(_session.Advanced.DocumentStore);
                     if (UseCustomId)
                         _session.Advanced.DocumentStore.Conventions.RegisterIdConvention<IdentityUser>((dbname, commands, user) => "IdentityUsers/" + user.Id);
                 }
@@ -61,8 +62,8 @@ namespace RavenDB.AspNet.Identity
             this.session.Store(user);
 
             // This model allows us to lookup a user by name in order to get the id
-            var userByName = new IdentityUserByUserName(user.Id, user.UserName);
-            this.session.Store(userByName, Util.GetIdentityUserByUserNameId(user.UserName));
+            //var userByName = new IdentityUserByUserName(user.Id, user.UserName);
+            //this.session.Store(userByName, Util.GetIdentityUserByUserNameId(user.UserName));
 
             return Task.FromResult(true);
         }
@@ -73,9 +74,9 @@ namespace RavenDB.AspNet.Identity
             if (user == null)
                 throw new ArgumentNullException("user");
 
-            var userByName = this.session.Load<IdentityUserByUserName>(Util.GetIdentityUserByUserNameId(user.UserName));
-            if (userByName != null)
-                this.session.Delete(userByName);
+            //var userByName = this.session.Load<IdentityUserByUserName>(Util.GetIdentityUserByUserNameId(user.UserName));
+            //if (userByName != null)
+            //    this.session.Delete(userByName);
 
             this.session.Delete(user);
             return Task.FromResult(true);
@@ -89,11 +90,11 @@ namespace RavenDB.AspNet.Identity
 
         public Task<TUser> FindByNameAsync(string userName)
         {
-            var userByName = this.session.Load<IdentityUserByUserName>(Util.GetIdentityUserByUserNameId(userName));
+            var userByName = this.session.Query<TUser>("UserByUserNameIndex").Where(x => x.UserName == userName).FirstOrDefault();
             if (userByName == null)
                 return Task.FromResult(default(TUser));
 
-            return FindByIdAsync(userByName.UserId);
+            return FindByIdAsync(userByName.Id);
         }
 
         public Task UpdateAsync(TUser user)
