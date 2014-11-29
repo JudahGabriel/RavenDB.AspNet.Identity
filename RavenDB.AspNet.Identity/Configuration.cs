@@ -11,5 +11,11 @@ namespace RavenDB.AspNet.Identity
             get { return (bool)this["usecustomid"]; }
             set { this["usecustomid"] = value; }
         }
+        [ConfigurationProperty("findbyindex", DefaultValue=false, IsRequired=false)]
+        public bool FindByIndex
+        {
+            get { return (bool)this["findbyindex"]; }
+            set { this["findbyindex"] = value; }
+        }
     }
 }

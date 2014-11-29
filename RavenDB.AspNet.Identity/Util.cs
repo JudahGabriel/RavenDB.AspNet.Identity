@@ -6,6 +6,7 @@ using System.Text;
 using Microsoft.AspNet.Identity;
 using Raven.Client.Indexes;
 using Raven.Client;
+using System.Threading.Tasks;
 
 namespace RavenDB.AspNet.Identity
 {
@@ -53,16 +54,17 @@ namespace RavenDB.AspNet.Identity
         {
             return string.Format("IdentityUserByUserNames/{0}", userName);
         }
-        internal static void TryCreatingIndexes<TUser>(IDocumentStore store)
+        public static Task TryCreatingIndexesAsync<TUser>(IDocumentStore store)
             where TUser: IdentityUser
         {
             try
             {
                 IndexCreation.CreateIndexes(typeof(UserByUserNameIndex<TUser>).Assembly, store);
+                return Task.FromResult(true);
             }
             catch (Exception e)
             {
-                throw e;
+                return Task.FromResult(false);
             }
         }
     }

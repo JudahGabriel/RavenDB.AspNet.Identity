@@ -9,7 +9,23 @@ namespace RavenDB.AspNet.Identity
 
         public static bool UseCustomId
         {
-            get { return AuthSettings.UseCustomId; }
+            get
+            {
+                if (AuthSettings != null)
+                    return AuthSettings.UseCustomId;
+                else
+                    return true;
+            }
+        }
+        public static bool FindByIndex
+        {
+            get
+            {
+                if (AuthSettings != null)
+                    return AuthSettings.FindByIndex;
+                else
+                    return false;
+            }
         }
 
         #region Private Properties

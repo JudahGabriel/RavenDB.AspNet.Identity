@@ -8,6 +8,7 @@ using Raven.Client;
 using Raven.Client.Embedded;
 using Raven.Client.Indexes;
 using RavenDB.AspNet.Identity;
+using Raven.Client.Document;
 
 namespace RavenDB.AspNet.Identity.Tests
 {
@@ -21,7 +22,7 @@ namespace RavenDB.AspNet.Identity.Tests
                 Configuration =
                 {
                     RunInMemory = true,
-                    //RunInUnreliableYetFastModeThatIsNotSuitableForProduction = true
+                    RunInUnreliableYetFastModeThatIsNotSuitableForProduction = true
                 }
             };
             embeddedStore.UseEmbeddedHttpServer = true;
