@@ -8,6 +8,7 @@ using Raven.Client;
 using Raven.Client.Embedded;
 using Raven.Client.Indexes;
 using RavenDB.AspNet.Identity;
+using Raven.Client.Document;
 
 namespace RavenDB.AspNet.Identity.Tests
 {
@@ -15,6 +16,7 @@ namespace RavenDB.AspNet.Identity.Tests
     {
         protected EmbeddableDocumentStore NewDocStore()
         {
+            Raven.Database.Server.NonAdminHttp.EnsureCanListenToWhenInNonAdminContext(8080, false);
             var embeddedStore = new EmbeddableDocumentStore
             {
                 Configuration =
@@ -23,9 +25,8 @@ namespace RavenDB.AspNet.Identity.Tests
                     RunInUnreliableYetFastModeThatIsNotSuitableForProduction = true
                 }
             };
-
+            embeddedStore.UseEmbeddedHttpServer = true;
             embeddedStore.Initialize();
-
             new RavenDocumentsByEntityName().Execute(embeddedStore);
 
             return embeddedStore;

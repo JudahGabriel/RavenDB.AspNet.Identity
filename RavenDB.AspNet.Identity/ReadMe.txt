@@ -24,3 +24,6 @@ These instructions assume you know how to set up RavenDB within an MVC applicati
     {
         this.UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(() => this.RavenSession));
     }
+ 5. (Optional) In Web.config or App.config:
+    * Add <section name="authSettings" type="RavenDB.AspNet.Identity.Configuration" allowDefinition="Everywhere" /> to the <configSections>
+	* Add custom configuration section <authSettings xmlns="https://github.com/ILMServices/RavenDB.AspNet.Identity" usecustomid="true" findbyindex="false" />

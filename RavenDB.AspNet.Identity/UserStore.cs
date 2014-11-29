@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Raven.Client;
+using Raven.Abstractions.Exceptions;
 
 namespace RavenDB.AspNet.Identity
 {
@@ -19,6 +20,7 @@ namespace RavenDB.AspNet.Identity
         private bool _disposed;
         private Func<IDocumentSession> getSessionFunc;
         private IDocumentSession _session;
+        bool _custom = Settings.UseCustomId;
 
         private IDocumentSession session
         {
@@ -27,20 +29,28 @@ namespace RavenDB.AspNet.Identity
                 if (_session == null)
                 {
                     _session = getSessionFunc();
-                    _session.Advanced.DocumentStore.Conventions.RegisterIdConvention<IdentityUser>((dbname, commands, user) => "IdentityUsers/" + user.Id);
+                    if (UseCustomId)
+                        _session.Advanced.DocumentStore.Conventions.RegisterIdConvention<IdentityUser>((dbname, commands, user) => "IdentityUsers/" + user.Id);
                 }
                 return _session;
             }
+        }
+        public bool UseCustomId
+        {
+            set { _custom = value; }
+            private get { return _custom; }
         }
 
         public UserStore(Func<IDocumentSession> getSession)
         {
             this.getSessionFunc = getSession;
+            Util.TryCreatingIndexesAsync<TUser>(_session.Advanced.DocumentStore);
         }
 
         public UserStore(IDocumentSession session)
         {
             this._session = session;
+            Util.TryCreatingIndexesAsync<TUser>(_session.Advanced.DocumentStore);
         }
 
         public Task CreateAsync(TUser user)
@@ -48,14 +58,17 @@ namespace RavenDB.AspNet.Identity
             this.ThrowIfDisposed();
             if (user == null)
                 throw new ArgumentNullException("user");
-            if (string.IsNullOrEmpty(user.Id))
+            if (string.IsNullOrEmpty(user.Id) && UseCustomId)
                 throw new InvalidOperationException("user.Id property must be specified before calling CreateAsync");
 
             this.session.Store(user);
 
-            // This model allows us to lookup a user by name in order to get the id
-            var userByName = new IdentityUserByUserName(user.Id, user.UserName);
-            this.session.Store(userByName, Util.GetIdentityUserByUserNameId(user.UserName));
+            if (!Settings.FindByIndex)
+            {
+                // This model allows us to lookup a user by name in order to get the id
+                var userByName = new IdentityUserByUserName(user.Id, user.UserName);
+                this.session.Store(userByName, Util.GetIdentityUserByUserNameId(user.UserName));
+            }
 
             return Task.FromResult(true);
         }
@@ -65,10 +78,12 @@ namespace RavenDB.AspNet.Identity
             this.ThrowIfDisposed();
             if (user == null)
                 throw new ArgumentNullException("user");
-
-            var userByName = this.session.Load<IdentityUserByUserName>(Util.GetIdentityUserByUserNameId(user.UserName));
-            if (userByName != null)
-                this.session.Delete(userByName);
+            if (!Settings.FindByIndex)
+            {
+                var userByName = this.session.Load<IdentityUserByUserName>(Util.GetIdentityUserByUserNameId(user.UserName));
+                if (userByName != null)
+                    this.session.Delete(userByName);
+            }
 
             this.session.Delete(user);
             return Task.FromResult(true);
@@ -82,11 +97,24 @@ namespace RavenDB.AspNet.Identity
 
         public Task<TUser> FindByNameAsync(string userName)
         {
-            var userByName = this.session.Load<IdentityUserByUserName>(Util.GetIdentityUserByUserNameId(userName));
-            if (userByName == null)
-                return Task.FromResult(default(TUser));
-
-            return FindByIdAsync(userByName.UserId);
+            if (Settings.FindByIndex)
+            {
+                RavenQueryStatistics stats;
+                var user = this.session.Query<TUser>("UserByUserNameIndex")
+                                    .Statistics(out stats)
+                                    .Customize(x => x.WaitForNonStaleResultsAsOfLastWrite())
+                                    .Where(x => x.UserName == userName)
+                                    .FirstOrDefault();
+                return Task.FromResult(user);
+            }
+            else
+            {
+                var userByName = this.session.Load<IdentityUserByUserName>(Util.GetIdentityUserByUserNameId(userName));
+                if (userByName == null)
+                    return Task.FromResult(default(TUser));
+                else
+                    return FindByIdAsync(userByName.UserId);
+            }
         }
 
         public Task UpdateAsync(TUser user)
