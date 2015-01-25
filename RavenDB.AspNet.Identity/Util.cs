@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -37,19 +37,19 @@ namespace RavenDB.AspNet.Identity
             return enumerable.ToList();
         }
 
-        internal static string GetLoginId(UserLoginInfo login)
+        internal static string GetLoginId(UserLoginInfo login, string identityPartsSeparator = "/")
         {
             using (var sha = new SHA1CryptoServiceProvider())
             {
                 byte[] clearBytes = Encoding.UTF8.GetBytes(login.LoginProvider + "|" + login.ProviderKey);
                 byte[] hashBytes = sha.ComputeHash(clearBytes);
-                return "IdentityUserLogins/" + Util.ToHex(hashBytes);
+                return string.Format("IdentityUserLogins{0}{1}", identityPartsSeparator, Util.ToHex(hashBytes));
             }
         }
 
-        internal static string GetIdentityUserByUserNameId(string userName)
+        internal static string GetIdentityUserByUserNameId(string userName, string identityPartsSeparator = "/")
         {
-            return string.Format("IdentityUserByUserNames/{0}", userName);
+            return string.Format("IdentityUserByUserNames{0}{1}", identityPartsSeparator, userName);
         }
     }
 }
