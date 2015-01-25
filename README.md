@@ -43,7 +43,23 @@ Install-Package RavenDB.AspNet.Identity
 // This example assumes you have a RavenController base class with public RavenSession property.
 public AccountController()
 {
-    this.UserManager = new UserManager<ApplicationUser>(
-        new UserStore<ApplicationUser>(() => this.RavenSession));
+   using (IDocumentSession ravenSession = store.OpenSession())
+   {
+      ApplicationUser user = new ApplicationUser()
+      {
+         Name = "Demo"
+      }
+      
+      ravenSession.Store(user);
+      
+	   this.UserManager = new UserManager<ApplicationUser>(
+         new UserStore<ApplicationUser>(() => ravenSession));
+      
+      var result = UserManager.Create(user, pwd1);
+      if (result.Succeeded)
+      {
+          ravenSession.SaveChanges();
+      }
+   }
 }
 ```
