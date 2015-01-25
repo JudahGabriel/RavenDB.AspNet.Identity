@@ -55,7 +55,7 @@ public AccountController()
 	   this.UserManager = new UserManager<ApplicationUser>(
          new UserStore<ApplicationUser>(() => ravenSession));
       
-      var result = UserManager.Create(user, pwd1);
+      var result = UserManager.Create(user, "passw0rd");
       if (result.Succeeded)
       {
           ravenSession.SaveChanges();
