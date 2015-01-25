@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,7 +55,7 @@ namespace RavenDB.AspNet.Identity
 
             // This model allows us to lookup a user by name in order to get the id
             var userByName = new IdentityUserByUserName(user.Id, user.UserName);
-            this.session.Store(userByName, Util.GetIdentityUserByUserNameId(user.UserName));
+            this.session.Store(userByName, Util.GetIdentityUserByUserNameId(user.UserName, this.session.Advanced.DocumentStore.Conventions.IdentityPartsSeparator));
 
             return Task.FromResult(true);
         }
@@ -66,7 +66,7 @@ namespace RavenDB.AspNet.Identity
             if (user == null)
                 throw new ArgumentNullException("user");
 
-            var userByName = this.session.Load<IdentityUserByUserName>(Util.GetIdentityUserByUserNameId(user.UserName));
+            var userByName = this.session.Load<IdentityUserByUserName>(Util.GetIdentityUserByUserNameId(user.UserName, this.session.Advanced.DocumentStore.Conventions.IdentityPartsSeparator));
             if (userByName != null)
                 this.session.Delete(userByName);
 
@@ -82,7 +82,7 @@ namespace RavenDB.AspNet.Identity
 
         public Task<TUser> FindByNameAsync(string userName)
         {
-            var userByName = this.session.Load<IdentityUserByUserName>(Util.GetIdentityUserByUserNameId(userName));
+            var userByName = this.session.Load<IdentityUserByUserName>(Util.GetIdentityUserByUserNameId(userName, this.session.Advanced.DocumentStore.Conventions.IdentityPartsSeparator));
             if (userByName == null)
                 return Task.FromResult(default(TUser));
 
@@ -121,7 +121,7 @@ namespace RavenDB.AspNet.Identity
 
                 this.session.Store(new IdentityUserLogin
                 {
-                    Id = Util.GetLoginId(login),
+                    Id = Util.GetLoginId(login, this.session.Advanced.DocumentStore.Conventions.IdentityPartsSeparator),
                     UserId = user.Id,
                     Provider = login.LoginProvider,
                     ProviderKey = login.ProviderKey
@@ -133,7 +133,7 @@ namespace RavenDB.AspNet.Identity
 
         public Task<TUser> FindAsync(UserLoginInfo login)
         {
-            string loginId = Util.GetLoginId(login);
+            string loginId = Util.GetLoginId(login, this.session.Advanced.DocumentStore.Conventions.IdentityPartsSeparator);
 
             var loginDoc = session.Include<IdentityUserLogin>(x => x.UserId)
                 .Load(loginId);
@@ -161,13 +161,13 @@ namespace RavenDB.AspNet.Identity
             if (user == null)
                 throw new ArgumentNullException("user");
 
-            string loginId = Util.GetLoginId(login);
+            string loginId = Util.GetLoginId(login, this.session.Advanced.DocumentStore.Conventions.IdentityPartsSeparator);
             var loginDoc = this.session.Load<IdentityUserLogin>(loginId);
             if (loginDoc != null)
                 this.session.Delete(loginDoc);
 
             user.Logins.RemoveAll(x => x.LoginProvider == login.LoginProvider && x.ProviderKey == login.ProviderKey);
-            
+
             return Task.FromResult(0);
         }
 
@@ -241,7 +241,7 @@ namespace RavenDB.AspNet.Identity
             this.ThrowIfDisposed();
             if (user == null)
                 throw new ArgumentNullException("user");
-            
+
             return Task.FromResult(user.SecurityStamp);
         }
 
