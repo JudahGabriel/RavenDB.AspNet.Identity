@@ -1,6 +1,6 @@
 # RavenDB.AspNet.Identity #
 An ASP.NET Identity provider for RavenDB.
-Thanks to http://www.ilmservice.com/ wich create the first Version of RavenDB.AspNet.Identity.
+Thanks to 'ilmservice' wich create the first Version of RavenDB.AspNet.Identity.
 
 ## Alpha Version ##
 Beware it is the first apha realese. I need more time for mor UnitTest.
@@ -57,25 +57,25 @@ Install-Package Blun.AspNet.Identity.RavenDb
 
 ```C#
 // This example assumes you have a RavenController base class with public RavenSession property.
-	public AccountController()
+public AccountController()
+{
+    using (IDocumentSession ravenSession = store.OpenSession())
+    {
+        ApplicationUser user = new ApplicationUser()
         {
-            using (IDocumentSession ravenSession = store.OpenSession())
-            {
-                ApplicationUser user = new ApplicationUser()
-                {
-                    Name = "Demo"
-                };
-      
-                ravenSession.Store(user);
-      
-                this.UserManager = new UserManager<ApplicationUser>(
-                                        new UserStore<ApplicationUser>(() => ravenSession));
-      
-                var result = UserManager.Create(user, "passw0rd");
-                if (result.Succeeded)
-                {
-                    ravenSession.SaveChanges();
-                }
-            }
+            Name = "Demo"
+        };
+
+        ravenSession.Store(user);
+
+        this.UserManager = new UserManager<ApplicationUser>(
+                                new UserStore<ApplicationUser>(() => ravenSession));
+
+        var result = UserManager.Create(user, "passw0rd");
+        if (result.Succeeded)
+        {
+            ravenSession.SaveChanges();
         }
+    }
+}
 ```
