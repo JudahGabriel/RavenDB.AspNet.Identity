@@ -1,5 +1,12 @@
 # RavenDB.AspNet.Identity #
-An ASP.NET Identity provider for RavenDB
+An ASP.NET Identity provider for RavenDB.
+Thanks to http://www.ilmservice.com/ wich create the first Version of RavenDB.AspNet.Identity.
+
+## Alpha Version ##
+Beware it is the first apha realese. I need more time for mor UnitTest.
+
+Greets
+Blun78
 
 ## Purpose ##
 
@@ -8,16 +15,25 @@ Entity Framework provider (Microsoft.AspNet.Identity.EntityFramework).
 
 ## Features ##
 * Drop-in replacement ASP.NET Identity with RavenDB as the backing store.
-* Requires only 2 document types, while EntityFramework requires 5 tables
+* Requires only 2 document types and 3 Index, while EntityFramework requires 5 tables
 * Contains the same IdentityUser class used by the EntityFramework provider in the MVC 5 project template.
+* Supports in RavenDB 'string' or 'int' for Document IDs 
 * Supports additional profile properties on your application's user model.
-* Provides UserStore<TUser> implementation that implements the same interfaces as the EntityFramework version:
-    * IUserStore<TUser>
-    * IUserLoginStore<TUser>
-    * IUserRoleStore<TUser>
-    * IUserClaimStore<TUser>
-    * IUserPasswordStore<TUser>
-    * IUserSecurityStampStore<TUser>
+* Provides UserStore<TUser, TRole, TKey>
+    * IUserStore<TUser, TKey>
+    * IUserLoginStore<TUser, TKey>
+    * IUserLockoutStore<TUser, TKey>
+    * IUserRoleStore<TUser, TKey>
+    * IUserClaimStore<TUser, TKey>
+    * IUserPasswordStore<TUser, TKey>
+    * IUserSecurityStampStore<TUser, TKey>
+    * IUserTwoFactorStore<TUser, TKey>
+    * IUserEmailStore<TUser, TKey>
+    * IUserPhoneNumberStore<TUser, TKey>
+    * IQueryableUserStore<TUser, TKey>
+* Provide RoleStore<TRole>
+    * IRoleStore<TRole, TKey>
+    * IQueryableRoleStore<TRole, TKey>
 
 ## Instructions ##
 These instructions assume you know how to set up RavenDB within an MVC application.
@@ -28,7 +44,7 @@ These instructions assume you know how to set up RavenDB within an MVC applicati
 ```PowerShell
 Uninstall-Package Microsoft.AspNet.Identity.EntityFramework
 Uninstall-Package EntityFramework
-Install-Package RavenDB.AspNet.Identity
+Install-Package Blun.AspNet.Identity.RavenDb
 ```
     
 3. In ~/Models/IdentityModels.cs:
@@ -41,25 +57,25 @@ Install-Package RavenDB.AspNet.Identity
 
 ```C#
 // This example assumes you have a RavenController base class with public RavenSession property.
-public AccountController()
-{
-   using (IDocumentSession ravenSession = store.OpenSession())
-   {
-      ApplicationUser user = new ApplicationUser()
-      {
-         Name = "Demo"
-      }
+	public AccountController()
+        {
+            using (IDocumentSession ravenSession = store.OpenSession())
+            {
+                ApplicationUser user = new ApplicationUser()
+                {
+                    Name = "Demo"
+                };
       
-      ravenSession.Store(user);
+                ravenSession.Store(user);
       
-	   this.UserManager = new UserManager<ApplicationUser>(
-         new UserStore<ApplicationUser>(() => ravenSession));
+                this.UserManager = new UserManager<ApplicationUser>(
+                                        new UserStore<ApplicationUser>(() => ravenSession));
       
-      var result = UserManager.Create(user, "passw0rd");
-      if (result.Succeeded)
-      {
-          ravenSession.SaveChanges();
-      }
-   }
-}
+                var result = UserManager.Create(user, "passw0rd");
+                if (result.Succeeded)
+                {
+                    ravenSession.SaveChanges();
+                }
+            }
+        }
 ```
