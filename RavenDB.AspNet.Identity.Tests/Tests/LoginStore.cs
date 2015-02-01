@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
-using RavenDB.AspNet.Identity;
+using RavenDB.AspNet.Identity.Common;
 using Xunit;
 using Xunit.Extensions;
-using Util = RavenDB.AspNet.Identity.Util;
 
+// ReSharper disable once CheckNamespace
 namespace RavenDB.AspNet.Identity.Tests
 {
     public class LoginStore : BaseTest
@@ -26,27 +23,27 @@ namespace RavenDB.AspNet.Identity.Tests
 
             using (var docStore = NewDocStore())
             {
-                using (var session = docStore.OpenSession())
+                using (var session = docStore.OpenAsyncSession())
                 {
-                    using (var mgr = new UserManager<SimpleAppUser>(new UserStore<SimpleAppUser>(session)))
+                    using (var mgr = new UserManager<SimpleAppUser>(new UserStore<SimpleAppUser, IdentityRole>(session) { AutoSaveChanges = false }))
                     {
                         IdentityResult result = mgr.Create(user, password);
 
                         Assert.True(result.Succeeded);
                         Assert.NotNull(user.Id);
 
-                        var res1 = mgr.AddLogin(user.Id, new UserLoginInfo("Google", googleLogin));
-                        var res2 = mgr.AddLogin(user.Id, new UserLoginInfo("Yahoo", yahooLogin));
+                        var res1 = mgr.AddLoginAsync(user.Id, new UserLoginInfo("Google", googleLogin)).Result;
+                        var res2 = mgr.AddLoginAsync(user.Id, new UserLoginInfo("Yahoo", yahooLogin)).Result;
 
                         Assert.True(res1.Succeeded);
                         Assert.True(res2.Succeeded);
                     }
-                    session.SaveChanges();
+                    session.SaveChangesAsync().Wait();
                 }
 
-                using (var session = docStore.OpenSession())
+                using (var session = docStore.OpenAsyncSession())
                 {
-                    var loaded = session.Load<SimpleAppUser>(user.Id);
+                    var loaded = session.LoadAsync<SimpleAppUser>(user.Id).Result;
                     Assert.NotNull(loaded);
                     Assert.NotSame(loaded, user);
                     Assert.Equal(loaded.Id, user.Id);
@@ -54,24 +51,25 @@ namespace RavenDB.AspNet.Identity.Tests
                     Assert.NotNull(loaded.PasswordHash);
 
                     Assert.Equal(loaded.Logins.Count, 2);
-                    Assert.True(loaded.Logins.Any(x => x.LoginProvider == "Google" && x.ProviderKey == googleLogin));
-                    Assert.True(loaded.Logins.Any(x => x.LoginProvider == "Yahoo" && x.ProviderKey == yahooLogin));
+                    Assert.True(loaded.Logins.Any(x => x.UserLoginInfo.LoginProvider == "Google" && x.UserLoginInfo.ProviderKey == googleLogin));
+                    Assert.True(loaded.Logins.Any(x => x.UserLoginInfo.LoginProvider == "Yahoo" && x.UserLoginInfo.ProviderKey == yahooLogin));
 
-                    var loadedLogins = session.Advanced.LoadStartingWith<IdentityUserLogin>("IdentityUserLogins/");
-                    Assert.Equal(loadedLogins.Length, 2);
+                    var loadedLogins = session.Advanced.LoadStartingWithAsync<IdentityUserLogin>("IdentityUserLogins/").Result;
+                    Assert.Equal(loadedLogins.Count(), 2);
 
                     foreach (var login in loaded.Logins)
                     {
-                        var loginDoc = session.Load<IdentityUserLogin>(Util.GetLoginId(login));
-                        Assert.Equal(login.LoginProvider, loginDoc.Provider);
-                        Assert.Equal(login.ProviderKey, loginDoc.ProviderKey);
+                        var loginDoc = session.LoadAsync<IdentityUserLogin>(Helper.GetLoginId(login.UserLoginInfo)).Result;
+                        Assert.Equal(login.UserLoginInfo.LoginProvider, loginDoc.UserLoginInfo.LoginProvider);
+                        Assert.Equal(login.UserLoginInfo.ProviderKey, loginDoc.UserLoginInfo.ProviderKey);
                         Assert.Equal(user.Id, loginDoc.UserId);
                     }
+                    session.SaveChangesAsync().Wait();
                 }
 
-                using (var session = docStore.OpenSession())
+                using (var session = docStore.OpenAsyncSession())
                 {
-                    using (var mgr = new UserManager<SimpleAppUser>(new UserStore<SimpleAppUser>(session)))
+                    using (var mgr = new UserManager<SimpleAppUser>(new UserStore<SimpleAppUser, IdentityRole>(session)))
                     {
                         var userByName = mgr.Find(username, password);
                         var userByGoogle = mgr.Find(new UserLoginInfo("Google", googleLogin));
@@ -88,7 +86,7 @@ namespace RavenDB.AspNet.Identity.Tests
                         Assert.Same(userByName, userByGoogle);
                         Assert.Same(userByName, userByYahoo);
                     }
-                    session.SaveChanges();
+                    session.SaveChangesAsync().Wait();
                 }
             }
         }

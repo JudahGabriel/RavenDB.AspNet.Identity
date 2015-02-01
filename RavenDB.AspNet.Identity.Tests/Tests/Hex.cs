@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RavenDB.AspNet.Identity.Common;
 using Xunit;
-using Util = RavenDB.AspNet.Identity.Util;
+using Xunit.Extensions;
 
+// ReSharper disable once CheckNamespace
 namespace RavenDB.AspNet.Identity.Tests
 {
     public class Hex
@@ -17,10 +19,10 @@ namespace RavenDB.AspNet.Identity.Tests
             Random rand = new Random();
             rand.NextBytes(randomBytes);
 
-            string hex = Util.ToHex(randomBytes);
+            string hex = Helper.ToHex(randomBytes);
             Assert.Equal(hex.Length, 4096*2);
 
-            byte[] roundtrip = Util.FromHex(hex);
+            byte[] roundtrip = Helper.FromHex(hex);
 
             Assert.Equal(roundtrip, randomBytes);
         }
@@ -28,8 +30,8 @@ namespace RavenDB.AspNet.Identity.Tests
         [Fact]
         public void Hex_case_doesnt_matter()
         {
-            byte[] b1 = Util.FromHex("0123456789ABCDEFabcdef0123456789");
-            byte[] b2 = Util.FromHex("0123456789abcdefABCDEF0123456789");
+            byte[] b1 = Helper.FromHex("0123456789ABCDEFabcdef0123456789");
+            byte[] b2 = Helper.FromHex("0123456789abcdefABCDEF0123456789");
 
             Assert.Equal(b1, b2);
         }

@@ -1,0 +1,34 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Raven.Abstractions.Indexing;
+using Raven.Client.Indexes;
+using RavenDB.AspNet.Identity.Entity;
+
+namespace RavenDB.AspNet.Identity.Index
+{
+    internal class IdentityRole_GetByName<TRole, TKey> : AbstractIndexCreationTask<TRole>
+        where TRole : IdentityRole<TKey>
+        where TKey : IConvertible, IComparable, IEquatable<TKey>
+    {
+        public class Result
+        {
+            public TKey Id { get; set; }
+            public string Name { get; set; }
+        }
+        
+        public IdentityRole_GetByName()
+        {
+            Index(x => x.Name, FieldIndexing.Default);
+            
+            Map = roles => roles.Select(
+                role => new Result()
+                {
+                    Id = role.Id,
+                    Name = role.Name
+                });
+        }
+    }
+}

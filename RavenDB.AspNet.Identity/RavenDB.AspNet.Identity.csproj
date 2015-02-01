@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,15 +32,21 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\IdentityForRavenDb.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.AspNet.Identity.Core">
-      <HintPath>..\..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
     <Reference Include="Raven.Abstractions">
-      <HintPath>..\..\packages\RavenDB.Client.2.5.2935\lib\net45\Raven.Abstractions.dll</HintPath>
+      <HintPath>..\packages\RavenDB.Client.3.0.3528\lib\net45\Raven.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Raven.Client.Lightweight">
-      <HintPath>..\..\packages\RavenDB.Client.2.5.2935\lib\net45\Raven.Client.Lightweight.dll</HintPath>
+      <HintPath>..\packages\RavenDB.Client.3.0.3528\lib\net45\Raven.Client.Lightweight.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -51,15 +58,38 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IdentityUser.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Entity\IdentityUser.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Index\IdentityUser_GetByUserName.cs" />
+    <Compile Include="Index\IdentityUser_GetByEmail.cs" />
+    <Compile Include="Index\IdentityRole_GetByName.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Store\UserStore.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="UserStore.cs" />
-    <Compile Include="Util.cs" />
+    <Compile Include="Common\GenericBase.cs" />
+    <Compile Include="Entity\IdentityRole.cs" />
+    <Compile Include="Entity\IdentityUserByUserName.cs" />
+    <Compile Include="Entity\IdentityUserClaim.cs" />
+    <Compile Include="Entity\IdentityUserLogin.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RoleStore.cs" />
+    <Compile Include="Store\RoleStore.cs" />
+    <Compile Include="Store\GenericStore.cs" />
+    <Compile Include="RoleStoreIntKey.cs" />
+    <Compile Include="Common\Helper.cs" />
+    <Compile Include="UserStoreIntKey.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\IdentityForRavenDb.snk">
+      <Link>IdentityForRavenDb.snk</Link>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
