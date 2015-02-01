@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 
-namespace RavenDB.AspNet.Identity.Common
+namespace Blun.AspNet.Identity.RavenDB.Common
 {
     public abstract class GenericBase<TKey> : IDisposable
         //where TKey : IConvertible, IComparable, IEquatable<TKey>

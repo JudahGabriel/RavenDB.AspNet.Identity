@@ -1,7 +1,9 @@
 using System;
+using Blun.AspNet.Identity.RavenDB.Store;
 using Raven.Client;
+using RavenDB.AspNet.Identity;
 
-namespace RavenDB.AspNet.Identity.Store
+namespace Blun.AspNet.Identity.RavenDB
 {
     public sealed class RoleStoreIntKey<TRole> :
         RoleStore<TRole, int>

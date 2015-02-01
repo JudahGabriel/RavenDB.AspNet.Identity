@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RavenDB.AspNet.Identity.Common;
+using Blun.AspNet.Identity.RavenDB.Common;
 using Xunit;
-using Xunit.Extensions;
 
 // ReSharper disable once CheckNamespace
-namespace RavenDB.AspNet.Identity.Tests
+namespace Blun.AspNet.Identity.RavenDB.Tests
 {
     public class Hex
     {

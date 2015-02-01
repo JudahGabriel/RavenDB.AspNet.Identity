@@ -1,8 +1,6 @@
-﻿using System;
-using System.Security.Claims;
-using RavenDB.AspNet.Identity.Common;
+﻿using System.Security.Claims;
 
-namespace RavenDB.AspNet.Identity.Entity
+namespace Blun.AspNet.Identity.RavenDB.Entity
 {
     public class IdentityUserClaim
     {

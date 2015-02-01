@@ -2,8 +2,9 @@ using System;
 using System.Linq;
 using Raven.Abstractions.Indexing;
 using Raven.Client.Indexes;
+using RavenDB.AspNet.Identity;
 
-namespace RavenDB.AspNet.Identity.Index
+namespace Blun.AspNet.Identity.RavenDB.Index
 {
     internal class IdentityUser_GetByUserName<TUser, TKey> : AbstractIndexCreationTask<TUser>
         where TUser : IdentityUser<TKey>

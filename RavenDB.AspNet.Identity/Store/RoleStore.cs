@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Raven.Client;
+using RavenDB.AspNet.Identity;
 
-namespace RavenDB.AspNet.Identity.Store
+namespace Blun.AspNet.Identity.RavenDB.Store
 {
 
     /// <summary>
@@ -44,7 +43,7 @@ namespace RavenDB.AspNet.Identity.Store
             base.CheckArgumentForNull(role, "role");
             base.CheckArgumentForNull(role.Name, "role.Name");
 
-            var checkRoleName = FindByNameAsync(role.Name);
+            var checkRoleName = FindByNameAsync(role.Name).Result;
             if (checkRoleName == null)
             {
                 return Session.StoreAsync(role);
@@ -97,7 +96,7 @@ namespace RavenDB.AspNet.Identity.Store
 
             TRole role = null;
 
-            role = Session.Query<TRole>().SingleOrDefaultAsync().Result;
+            role = Session.Query<TRole>().SingleOrDefaultAsync(x => x.Name == roleName).Result;
 
             return Task.FromResult(role);
         }

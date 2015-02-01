@@ -2,18 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Blun.AspNet.Identity.RavenDB.Common;
+using Blun.AspNet.Identity.RavenDB.Entity;
+using Blun.AspNet.Identity.RavenDB.Index;
 using Microsoft.AspNet.Identity;
 using Raven.Client;
-using Raven.Client.Linq.Indexing;
-using RavenDB.AspNet.Identity.Common;
-using RavenDB.AspNet.Identity.Entity;
-using RavenDB.AspNet.Identity.Index;
+using RavenDB.AspNet.Identity;
 
-
-namespace RavenDB.AspNet.Identity.Store
+namespace Blun.AspNet.Identity.RavenDB.Store
 {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly")]
     public class UserStore<TUser, TRole, TKey> :
@@ -35,7 +33,7 @@ namespace RavenDB.AspNet.Identity.Store
         where TKey : IConvertible, IComparable, IEquatable<TKey>
     {
         #region CTOR
-
+        
         protected UserStore(Func<IAsyncDocumentSession> getSession)
             : base(getSession)
         {

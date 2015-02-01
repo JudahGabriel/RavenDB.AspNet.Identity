@@ -1,14 +1,10 @@
 using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Blun.AspNet.Identity.RavenDB.Common;
 using Raven.Client;
 using Raven.Client.Document.Async;
-using Raven.Client.Indexes;
-using RavenDB.AspNet.Identity.Common;
-using RavenDB.AspNet.Identity.Index;
 
-namespace RavenDB.AspNet.Identity.Store
+namespace Blun.AspNet.Identity.RavenDB.Store
 {
     /// <summary>
     /// /the base for the <see cref="UserStore"/> and <see cref="Rolestore"/>

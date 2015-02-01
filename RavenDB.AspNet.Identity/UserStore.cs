@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Blun.AspNet.Identity.RavenDB.Store;
 using Microsoft.AspNet.Identity;
 using Raven.Client;
-using RavenDB.AspNet.Identity.Store;
+using RavenDB.AspNet.Identity;
 
-namespace RavenDB.AspNet.Identity
+namespace Blun.AspNet.Identity.RavenDB
 {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly")]
     public sealed class UserStore<TUser, TRole> : UserStore<TUser, TRole, string>,

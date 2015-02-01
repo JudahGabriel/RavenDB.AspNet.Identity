@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNet.Identity;
 
-namespace RavenDB.AspNet.Identity.Common
+namespace Blun.AspNet.Identity.RavenDB.Common
 {
     internal static class Helper
     {

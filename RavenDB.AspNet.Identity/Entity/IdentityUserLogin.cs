@@ -1,6 +1,6 @@
 ﻿using System;
+using Blun.AspNet.Identity.RavenDB.Common;
 using Microsoft.AspNet.Identity;
-using RavenDB.AspNet.Identity.Common;
 
 // ReSharper disable once CheckNamespace
 namespace RavenDB.AspNet.Identity

@@ -1,20 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\xunit.runner.visualstudio.2.0.0-rc1-build1030\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.2.0.0-rc1-build1030\build\net20\xunit.runner.visualstudio.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6B02A46F-AEF3-4800-95EC-93BEE08254CF}</ProjectGuid>
+    <ProjectGuid>{C147FA58-04F8-4139-9E6E-E3D72F3E30EC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RavenDB.AspNet.Identity.Tests</RootNamespace>
-    <AssemblyName>RavenDB.AspNet.Identity.Tests</AssemblyName>
+    <RootNamespace>Blun.AspNet.Identity.RavenDB</RootNamespace>
+    <AssemblyName>Blun.AspNet.Identity.RavenDB</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <NuGetPackageImportStamp>00731392</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -24,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -44,61 +43,64 @@
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
     <Reference Include="Raven.Abstractions">
-      <HintPath>..\packages\RavenDB.Database.3.0.3528\lib\net45\Raven.Abstractions.dll</HintPath>
+      <HintPath>..\packages\RavenDB.Client.3.0.3528\lib\net45\Raven.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Raven.Client.Lightweight">
       <HintPath>..\packages\RavenDB.Client.3.0.3528\lib\net45\Raven.Client.Lightweight.dll</HintPath>
     </Reference>
-    <Reference Include="Raven.Database">
-      <HintPath>..\packages\RavenDB.Database.3.0.3528\lib\net45\Raven.Database.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="xunit, Version=1.9.2.1705, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.extensions">
-      <HintPath>..\packages\xunit.extensions.1.9.2\lib\net20\xunit.extensions.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Tests\Hex.cs" />
-    <Compile Include="Tests\LoginStore.cs" />
+    <Compile Include="..\AssemblyInfoGlobal.cs">
+      <Link>Properties\AssemblyInfoGlobal.cs</Link>
+    </Compile>
+    <Compile Include="Entity\IdentityUser.cs" />
+    <Compile Include="Entity\IdentityUserIntKey.cs" />
+    <Compile Include="Entity\IdentityRole.cs" />
+    <Compile Include="Entity\IdentityRoleIntKey.cs" />
+    <Compile Include="Entity\IdentityUser%271.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Index\IdentityUser_GetByUserName.cs" />
+    <Compile Include="Index\IdentityUser_GetByEmail.cs" />
+    <Compile Include="Index\IdentityRole_GetByName.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Store\UserStore.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UserStore.cs" />
+    <Compile Include="Common\GenericBase.cs" />
+    <Compile Include="Entity\IdentityRole%271.cs" />
+    <Compile Include="Entity\IdentityUserClaim.cs" />
+    <Compile Include="Entity\IdentityUserLogin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Models\SimpleAppUser.cs" />
-    <Compile Include="Infrastructure\BaseTest.cs" />
+    <Compile Include="RoleStore.cs" />
+    <Compile Include="Store\RoleStore.cs" />
+    <Compile Include="Store\GenericStore.cs" />
+    <Compile Include="RoleStoreIntKey.cs" />
+    <Compile Include="Common\Helper.cs" />
+    <Compile Include="UserStoreIntKey.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\IdentityForRavenDb.snk">
       <Link>IdentityForRavenDb.snk</Link>
     </None>
+    <None Include="Blun.AspNet.Identity.RavenDB.nuspec" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\RavenDB.AspNet.Identity\RavenDB.AspNet.Identity.csproj">
-      <Project>{c147fa58-04f8-4139-9e6e-e3d72f3e30ec}</Project>
-      <Name>RavenDB.AspNet.Identity</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.0.0-rc1-build1030\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.0.0-rc1-build1030\build\net20\xunit.runner.visualstudio.props'))" />
-  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

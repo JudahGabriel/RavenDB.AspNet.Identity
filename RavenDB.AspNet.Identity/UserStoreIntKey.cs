@@ -1,8 +1,9 @@
 using System;
+using Blun.AspNet.Identity.RavenDB.Store;
 using Raven.Client;
-using RavenDB.AspNet.Identity.Store;
+using RavenDB.AspNet.Identity;
 
-namespace RavenDB.AspNet.Identity
+namespace Blun.AspNet.Identity.RavenDB
 {
     public sealed class UserStoreIntKey<TUser, TRole> : UserStore<TUser, TRole, int>
         where TUser : IdentityUser<int>

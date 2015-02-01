@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Raven.Abstractions.Indexing;
 using Raven.Client.Indexes;
-using RavenDB.AspNet.Identity.Entity;
+using RavenDB.AspNet.Identity;
 
-namespace RavenDB.AspNet.Identity.Index
+namespace Blun.AspNet.Identity.RavenDB.Index
 {
     internal class IdentityRole_GetByName<TRole, TKey> : AbstractIndexCreationTask<TRole>
         where TRole : IdentityRole<TKey>
