@@ -60,6 +60,8 @@ namespace Blun.AspNet.Identity.RavenDB.Tests.Infrastructure
                     RunInUnreliableYetFastModeThatIsNotSuitableForProduction = true
                 }
             };
+            
+            embeddedStore.UseEmbeddedHttpServer = true;
 
             return embeddedStore;
         }
@@ -79,26 +81,5 @@ namespace Blun.AspNet.Identity.RavenDB.Tests.Infrastructure
 
         #endregion
 
-
-        //protected RoleManager<TRole> NewRoleStore<TRole>(IDocumentStore docStore)
-        //    where TRole : IdentityRole
-        //{
-        //    return new RoleStore<TRole>(docStore.OpenAsyncSession);
-        //}
-
-        //protected UserStore<TUser, TRole> NewUserStore<TUser, TRole>(IDocumentStore docStore)
-        //    where TUser : IdentityUser
-        //    where TRole : IdentityRole
-        //{
-        //    return new UserStore<TUser, TRole>(docStore.OpenAsyncSession);
-        //}
-
-        //protected UserManager<TUser> NewUserManager<TUser, TRole>(IDocumentStore docStore)
-        //    where TUser : IdentityUser
-        //    where TRole : IdentityRole
-        //{
-        //    return new UserManager<TUser>(this.NewUserStore<TUser, TRole>(docStore));
-        //}
-       
     }
 }

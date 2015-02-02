@@ -10,7 +10,7 @@ using Xunit;
 // ReSharper disable once CheckNamespace
 namespace Blun.AspNet.Identity.RavenDB.Tests
 {
-    public class LoginStore : BaseTest
+    public class LoginStoreTest : BaseTest
     {
         [Fact]
         public void Can_create_user_and_log_in()
@@ -21,12 +21,12 @@ namespace Blun.AspNet.Identity.RavenDB.Tests
             const string googleLogin = "http://www.google.com/fake/user/identifier";
             const string yahooLogin = "http://www.yahoo.com/fake/user/identifier";
 
-            var user = new SimpleAppUser { Id = userId, UserName = username };
+            var user = new SimpleUser { Id = userId, UserName = username };
 
 
             using (
                 var mgr =
-                    new UserManager<SimpleAppUser>(new UserStore<SimpleAppUser, SimpleRole>(_session)
+                    new UserManager<SimpleUser>(new UserStore<SimpleUser, SimpleRole>(_session)
                     {
                         AutoSaveChanges = false
                     }))
@@ -44,7 +44,7 @@ namespace Blun.AspNet.Identity.RavenDB.Tests
             }
             _session.SaveChangesAsync().Wait();
             
-            var loaded = _session.LoadAsync<SimpleAppUser>(user.Id).Result;
+            var loaded = _session.LoadAsync<SimpleUser>(user.Id).Result;
             Assert.NotNull(loaded);
             //Assert.NotSame(loaded, user);
             Assert.Equal(loaded.Id, user.Id);
@@ -72,7 +72,7 @@ namespace Blun.AspNet.Identity.RavenDB.Tests
             _session.SaveChangesAsync().Wait();
 
 
-            using (var mgr = new UserManager<SimpleAppUser>(new UserStore<SimpleAppUser, SimpleRole>(_session)))
+            using (var mgr = new UserManager<SimpleUser>(new UserStore<SimpleUser, SimpleRole>(_session)))
             {
                 var userByName = mgr.Find(username, password);
                 var userByGoogle = mgr.Find(new UserLoginInfo("Google", googleLogin));

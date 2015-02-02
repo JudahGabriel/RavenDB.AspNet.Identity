@@ -2,7 +2,7 @@
 
 namespace Blun.AspNet.Identity.RavenDB.Tests.Models
 {
-    public class SimpleAppUserIntKey : IdentityUserIntKey
+    public class SimpleUser : IdentityUser
     {
     }
 }

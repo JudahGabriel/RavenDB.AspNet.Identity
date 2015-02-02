@@ -14,7 +14,7 @@ namespace Blun.AspNet.Identity.RavenDB.Store
     /// <typeparam name="TRole"></typeparam>
     /// <typeparam name="TKey">only <see cref="string"/> or <see cref="int"/></typeparam>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1063:ImplementIDisposableCorrectly")]
-    public abstract class RoleStore<TRole, TKey> :
+    public class RoleStore<TRole, TKey> :
                                 GenericStore<TKey>,
                                 IRoleStore<TRole, TKey>,
                                 //IRoleClaimStore<TRole, TKey>,  vNext

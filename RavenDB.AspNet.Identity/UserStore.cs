@@ -19,8 +19,8 @@ namespace Blun.AspNet.Identity.RavenDB
                                             IUserRoleStore<TUser>,
                                             IUserSecurityStampStore<TUser>,
                                             IUserTwoFactorStore<TUser, string>
-        where TUser : IdentityUser<string>, IUser
-        where TRole : IdentityRole<string>, IRole
+        where TUser : IdentityUser, IUser
+        where TRole : IdentityRole, IRole
     {
         public UserStore(Func<IAsyncDocumentSession> getSession)
             : base(getSession)

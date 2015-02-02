@@ -73,21 +73,22 @@
     <Compile Include="..\AssemblyInfoGlobal.cs">
       <Link>Properties\AssemblyInfoGlobal.cs</Link>
     </Compile>
-    <Compile Include="Models\SimpleAppUser.cs">
+    <Compile Include="Models\SimpleUser.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Models\SimpleAppUserIntKey.cs" />
+    <Compile Include="Models\SimpleUserIntKey.cs" />
     <Compile Include="Models\SimpleRole.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Models\SimpleRoleIntKey.cs" />
-    <Compile Include="Tests\Hex.cs" />
-    <Compile Include="Tests\LoginStore.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Infrastructure\BaseTest.cs" />
-    <Compile Include="Tests\RoleStore.cs">
+    <Compile Include="Tests\RoleStoreTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tests\UserStoreTest.cs" />
+    <Compile Include="Tests\Hex.cs" />
+    <Compile Include="Tests\LoginStoreTest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Infrastructure\BaseTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\IdentityForRavenDb.snk">
