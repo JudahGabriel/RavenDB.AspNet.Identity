@@ -81,6 +81,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Models\SimpleRoleIntKey.cs" />
+    <Compile Include="Tests\TestIUserClaimStore.cs" />
     <Compile Include="Tests\RoleStoreTest.cs">
       <SubType>Code</SubType>
     </Compile>

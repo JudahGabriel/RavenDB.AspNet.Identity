@@ -46,7 +46,7 @@ namespace Blun.AspNet.Identity.RavenDB.Store
             var checkRoleName = FindByNameAsync(role.Name).Result;
             if (checkRoleName == null)
             {
-                return Session.StoreAsync(role);
+                 Session.StoreAsync(role).Wait();
             }
 
             return base.SaveChangesAsync();

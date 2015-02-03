@@ -27,7 +27,7 @@ namespace Blun.AspNet.Identity.RavenDB.Tests
         private void ClaenUpRavenDb()
         {
             DeleteRoles();
-            
+
         }
 
         private void CreatRoles()
@@ -121,7 +121,7 @@ namespace Blun.AspNet.Identity.RavenDB.Tests
             // Act
             using (var mgr = new RoleManager<SimpleRole>(new RoleStore<SimpleRole>(_session) { AutoSaveChanges = true }))
             {
-                roleResult = mgr.FindByIdAsync(id).Result;
+                roleResult = mgr.FindByIdAsync(id + "32947298472984").Result;
             }
 
             // Assert
@@ -210,7 +210,8 @@ namespace Blun.AspNet.Identity.RavenDB.Tests
             var roleResult = _session.LoadAsync<SimpleRole>(id).Result;
             Assert.NotNull(roleResult);
             Assert.NotNull(e);
-            Assert.IsType<InvalidOperationException>(e);
+            Assert.IsType<InvalidOperationException>(e.InnerException);
+            Assert.IsType<AggregateException>(e);
         }
 
         [Fact]

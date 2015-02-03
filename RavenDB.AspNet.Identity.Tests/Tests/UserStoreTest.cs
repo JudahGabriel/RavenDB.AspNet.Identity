@@ -119,7 +119,7 @@ namespace Blun.AspNet.Identity.RavenDB.Tests
             // Act
             using (var mgr = new UserManager<SimpleUser>(new UserStore<SimpleUser, SimpleRole>(_session) { AutoSaveChanges = true }))
             {
-                userResult = mgr.FindByIdAsync(id).Result;
+                userResult = mgr.FindByIdAsync(id+"321311312313213414214143214124214").Result;
             }
 
             // Assert
@@ -208,7 +208,8 @@ namespace Blun.AspNet.Identity.RavenDB.Tests
             var userResult = _session.LoadAsync<SimpleUser>(id).Result;
             Assert.NotNull(userResult);
             Assert.NotNull(e);
-            Assert.IsType<InvalidOperationException>(e);
+            Assert.IsType<InvalidOperationException>(e.InnerException);
+            Assert.IsType<AggregateException>(e);
         }
 
         [Fact]

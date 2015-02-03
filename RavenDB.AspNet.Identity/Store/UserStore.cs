@@ -63,7 +63,7 @@ namespace Blun.AspNet.Identity.RavenDB.Store
         {
             base.CheckArgumentForNull(user, "user");
 
-            this.Session.StoreAsync(user);
+            this.Session.StoreAsync(user).Wait();
 
             return base.SaveChangesAsync();
         }
