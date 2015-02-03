@@ -74,6 +74,189 @@ namespace Blun.AspNet.Identity.RavenDB.Tests
             Assert.Null(userResult);
         }
 
+
+        [Fact]
+        public void IUserStore_FindByIdAsync_Name_SimpleUser_True()
+        {
+            // Arrange
+            const string name = "FindByIdAsync";
+            var user = new SimpleUser()
+            {
+                UserName = name
+            };
+            _session.StoreAsync(user).Wait();
+            _session.SaveChangesAsync().Wait();
+            var id = user.Id;
+            SimpleUser userResult = null;
+
+            // Act
+            using (var mgr = new UserManager<SimpleUser>(new UserStore<SimpleUser, SimpleRole>(_session) { AutoSaveChanges = true }))
+            {
+                userResult = mgr.FindByNameAsync(name).Result;
+            }
+
+            // Assert
+            Assert.NotNull(userResult);
+            Assert.Equal(user.Id, userResult.Id);
+            Assert.Equal(user.UserName, userResult.UserName);
+        }
+
+
+        [Fact]
+        public void IUserStore_FindByIdAsync_ID_SimpleUser_False()
+        {
+            // Arrange
+            const string name = "FindByIdAsync";
+            var user = new SimpleUser()
+            {
+                UserName = name
+            };
+            _session.StoreAsync(user).Wait();
+            _session.SaveChangesAsync().Wait();
+            var id = user.Id;
+            SimpleUser userResult = null;
+
+            // Act
+            using (var mgr = new UserManager<SimpleUser>(new UserStore<SimpleUser, SimpleRole>(_session) { AutoSaveChanges = true }))
+            {
+                userResult = mgr.FindByIdAsync(id).Result;
+            }
+
+            // Assert
+            Assert.Null(userResult);
+        }
+
+        [Fact]
+        public void IUserStore_FindByIdAsync_ID_SimpleUser_True()
+        {
+            // Arrange
+            const string name = "FindByIdAsync";
+            var user = new SimpleUser()
+            {
+                UserName = name
+            };
+            _session.StoreAsync(user).Wait();
+            _session.SaveChangesAsync().Wait();
+            var id = user.Id;
+            SimpleUser userResult = null;
+
+            // Act
+            using (var mgr = new UserManager<SimpleUser>(new UserStore<SimpleUser, SimpleRole>(_session) { AutoSaveChanges = true }))
+            {
+                userResult = mgr.FindByIdAsync(id).Result;
+            }
+
+            // Assert
+            Assert.NotNull(userResult);
+            Assert.Equal(user.Id, userResult.Id);
+            Assert.Equal(user.UserName, userResult.UserName);
+        }
+
+        [Fact]
+        public void IUserStore_DeleteAsync_SimpleUser_ID_True()
+        {
+            // Arrange
+            const string name = "DeleteAsync";
+            var user = new SimpleUser()
+            {
+                UserName = name
+            };
+            _session.StoreAsync(user).Wait();
+            _session.SaveChangesAsync().Wait();
+            var id = user.Id;
+
+            // Act
+            using (var mgr = new UserManager<SimpleUser>(new UserStore<SimpleUser, SimpleRole>(_session) { AutoSaveChanges = true }))
+            {
+                mgr.DeleteAsync(user).Wait();
+            }
+
+            // Assert
+            var userResult = _session.LoadAsync<SimpleUser>(id).Result;
+            Assert.Null(userResult);
+        }
+
+        [Fact]
+        public void IUserStore_DeleteAsync_SimpleUser_ID_Fale()
+        {
+            // Arrange
+            const string name = "DeleteAsync";
+            var user = new SimpleUser()
+            {
+                UserName = name
+            };
+            _session.StoreAsync(user).Wait();
+            _session.SaveChangesAsync().Wait();
+            var id = user.Id;
+            Exception e = null;
+
+            // Act
+            using (var mgr = new UserManager<SimpleUser>(new UserStore<SimpleUser, SimpleRole>(_session) { AutoSaveChanges = true }))
+            {
+                var act = new SimpleUser();
+                try
+                {
+                    mgr.DeleteAsync(act).Wait();
+                }
+                catch (Exception ex)
+                {
+                    e = ex;
+                }
+            }
+
+            // Assert
+            var userResult = _session.LoadAsync<SimpleUser>(id).Result;
+            Assert.NotNull(userResult);
+            Assert.NotNull(e);
+            Assert.IsType<InvalidOperationException>(e);
+        }
+
+        [Fact]
+        public void IUserStore_UpdateAsync_SimpleUser_ID_ID_NAME_NAME()
+        {
+            // Arrange
+            const string name = "UpdateAsync";
+            var user = new SimpleUser()
+            {
+                UserName = name + "1"
+            };
+            _session.StoreAsync(user).Wait();
+            _session.SaveChangesAsync().Wait();
+
+            // Act
+            using (var mgr = new UserManager<SimpleUser>(new UserStore<SimpleUser, SimpleRole>(_session) { AutoSaveChanges = true }))
+            {
+                user.UserName = name;
+                mgr.UpdateAsync(user).Wait();
+            }
+
+            // Assert
+            var userResult = _session.LoadAsync<SimpleUser>(user.Id).Result;
+            Assert.Equal(user.Id, userResult.Id);
+            Assert.Equal(user.UserName, name);
+        }
+
+        [Fact]
+        public void IUserStore_CreateAsync_SimpleUser_ID_True()
+        {
+            // Arrange
+            var user = new SimpleUser()
+            {
+                UserName = "CreateAsync"
+            };
+
+            // Act
+            using (var mgr = new UserManager<SimpleUser>(new UserStore<SimpleUser, SimpleRole>(_session) { AutoSaveChanges = false }))
+            {
+                mgr.CreateAsync(user).Wait();
+                _session.SaveChangesAsync().Wait();
+            }
+
+            // Assert
+            Assert.True(!string.IsNullOrWhiteSpace(user.Id));
+        }
+
+
         #endregion
             
         #region IQueryableUserStore
