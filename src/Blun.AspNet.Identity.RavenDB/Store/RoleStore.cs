@@ -17,7 +17,7 @@ namespace Blun.AspNet.Identity.RavenDB.Store
     public class RoleStore<TRole, TKey> :
                                 GenericStore<TKey>,
                                 IRoleStore<TRole, TKey>,
-                                //IRoleClaimStore<TRole, TKey>,  vNext
+        //IRoleClaimStore<TRole, TKey>,  vNext
                                 IQueryableRoleStore<TRole, TKey>
         where TRole : IdentityRole<TKey>
         where TKey : IConvertible, IComparable, IEquatable<TKey>
@@ -38,37 +38,37 @@ namespace Blun.AspNet.Identity.RavenDB.Store
 
         #region IRoleStore
 
-        public Task CreateAsync(TRole role)
+        public async Task CreateAsync(TRole role)
         {
             base.CheckArgumentForNull(role, "role");
             base.CheckArgumentForNull(role.Name, "role.Name");
 
-            var checkRoleName = FindByNameAsync(role.Name).Result;
+            var checkRoleName = await FindByNameAsync(role.Name);
             if (checkRoleName == null)
             {
-                 Session.StoreAsync(role).Wait();
+                await base.Session.StoreAsync(role);
             }
 
-            return base.SaveChangesAsync();
+            await base.SaveChangesAsync();
         }
 
-        public Task UpdateAsync(TRole role)
+        public async Task UpdateAsync(TRole role)
         {
             base.CheckArgumentForNull(role, "role");
 
-            return base.SaveChangesAsync();
+            await base.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(TRole role)
+        public async Task DeleteAsync(TRole role)
         {
             base.CheckArgumentForNull(role, "role");
 
             Session.Delete(role);
 
-            return base.SaveChangesAsync();
+            await base.SaveChangesAsync();
         }
 
-        public Task<TRole> FindByIdAsync(TKey roleId)
+        public async Task<TRole> FindByIdAsync(TKey roleId)
         {
             base.CheckArgumentForNull(roleId, "roleId");
 
@@ -76,29 +76,25 @@ namespace Blun.AspNet.Identity.RavenDB.Store
             if (CheckInt())
             {
                 var id = Convert.ToInt32(roleId);
-                role = this.Session.LoadAsync<TRole>(id).Result;
+                return await base.Session.LoadAsync<TRole>(id);
             }
             else if (CheckString())
             {
-                role = this.Session.LoadAsync<TRole>(roleId as string).Result;
+                return await base.Session.LoadAsync<TRole>(roleId as string);
             }
             else
             {
                 ThrowTypeAccessException(typeof(TKey));
             }
 
-            return Task.FromResult(role);
+            return await Task.FromResult(role);
         }
 
-        public Task<TRole> FindByNameAsync(string roleName)
+        public async Task<TRole> FindByNameAsync(string roleName)
         {
             base.CheckArgumentForNull(roleName, "roleName");
 
-            TRole role = null;
-
-            role = Session.Query<TRole>().SingleOrDefaultAsync(x => x.Name == roleName).Result;
-
-            return Task.FromResult(role);
+            return await Session.Query<TRole>().FirstOrDefaultAsync(x => x.Name == roleName);
         }
 
         #endregion

@@ -4,15 +4,18 @@ using Blun.AspNet.Identity.RavenDB.Common;
 using Blun.AspNet.Identity.RavenDB.Tests.Infrastructure;
 using Blun.AspNet.Identity.RavenDB.Tests.Models;
 using Microsoft.AspNet.Identity;
+using NUnit.Framework;
 using RavenDB.AspNet.Identity;
-using Xunit;
+using NUnit;
 
 // ReSharper disable once CheckNamespace
 namespace Blun.AspNet.Identity.RavenDB.Tests
 {
-    public class LoginStoreTest : BaseTest
+    [TestFixture]
+    [Ignore]
+    public class LoginStoreTest : BaseTest<SimpleUser>
     {
-        [Fact]
+        [Test]
         public void Can_create_user_and_log_in()
         {
             const string username = "DavidBoike";
@@ -26,9 +29,9 @@ namespace Blun.AspNet.Identity.RavenDB.Tests
 
             using (
                 var mgr =
-                    new UserManager<SimpleUser>(new UserStore<SimpleUser, SimpleRole>(_session)
+                    new UserManager<SimpleUser>(new UserStore<SimpleUser, SimpleRole>(GetSession())
                     {
-                        AutoSaveChanges = false
+                        AutoSaveChanges = true
                     }))
             {
                 IdentityResult result = mgr.Create(user, password);
@@ -42,16 +45,16 @@ namespace Blun.AspNet.Identity.RavenDB.Tests
                 Assert.True(res1.Succeeded);
                 Assert.True(res2.Succeeded);
             }
-            _session.SaveChangesAsync().Wait();
+            GetSession().SaveChangesAsync().Wait();
             
-            var loaded = _session.LoadAsync<SimpleUser>(user.Id).Result;
+            var loaded = GetSession().LoadAsync<SimpleUser>(user.Id).Result;
             Assert.NotNull(loaded);
             //Assert.NotSame(loaded, user);
-            Assert.Equal(loaded.Id, user.Id);
-            Assert.Equal(loaded.UserName, user.UserName);
+            Assert.AreEqual(loaded.Id, user.Id);
+            Assert.AreEqual(loaded.UserName, user.UserName);
             Assert.NotNull(loaded.PasswordHash);
 
-            Assert.Equal(loaded.Logins.Count, 2);
+            Assert.AreEqual(loaded.Logins.Count, 2);
             Assert.True(
                 loaded.Logins.Any(
                     x => x.UserLoginInfo.LoginProvider == "Google" && x.UserLoginInfo.ProviderKey == googleLogin));
@@ -59,20 +62,20 @@ namespace Blun.AspNet.Identity.RavenDB.Tests
                 loaded.Logins.Any(
                     x => x.UserLoginInfo.LoginProvider == "Yahoo" && x.UserLoginInfo.ProviderKey == yahooLogin));
 
-            var loadedLogins = _session.Advanced.LoadStartingWithAsync<IdentityUserLogin>("IdentityUserLogins/").Result;
-            Assert.Equal(loadedLogins.Count(), 2);
+            var loadedLogins = GetSession().Advanced.LoadStartingWithAsync<IdentityUserLogin>("IdentityUserLogins/").Result;
+            Assert.AreEqual(loadedLogins.Count(), 2);
 
             foreach (var login in loaded.Logins)
             {
-                var loginDoc = _session.LoadAsync<IdentityUserLogin>(Helper.GetLoginId(login.UserLoginInfo)).Result;
-                Assert.Equal(login.UserLoginInfo.LoginProvider, loginDoc.UserLoginInfo.LoginProvider);
-                Assert.Equal(login.UserLoginInfo.ProviderKey, loginDoc.UserLoginInfo.ProviderKey);
-                Assert.Equal(user.Id, loginDoc.UserId);
+                var loginDoc = GetSession().LoadAsync<IdentityUserLogin>(Helper.GetLoginId(login.UserLoginInfo)).Result;
+                Assert.AreEqual(login.UserLoginInfo.LoginProvider, loginDoc.UserLoginInfo.LoginProvider);
+                Assert.AreEqual(login.UserLoginInfo.ProviderKey, loginDoc.UserLoginInfo.ProviderKey);
+                Assert.AreEqual(user.Id, loginDoc.UserId);
             }
-            _session.SaveChangesAsync().Wait();
+            GetSession().SaveChangesAsync().Wait();
 
 
-            using (var mgr = new UserManager<SimpleUser>(new UserStore<SimpleUser, SimpleRole>(_session)))
+            using (var mgr = new UserManager<SimpleUser>(new UserStore<SimpleUser, SimpleRole>(GetSession())))
             {
                 var userByName = mgr.Find(username, password);
                 var userByGoogle = mgr.Find(new UserLoginInfo("Google", googleLogin));
@@ -82,14 +85,14 @@ namespace Blun.AspNet.Identity.RavenDB.Tests
                 Assert.NotNull(userByGoogle);
                 Assert.NotNull(userByYahoo);
 
-                Assert.Equal(userByName.Id, userId);
-                Assert.Equal(userByName.UserName, username);
+                Assert.AreEqual(userByName.Id, userId);
+                Assert.AreEqual(userByName.UserName, username);
 
                 // The Session cache should return the very same objects
-                Assert.Same(userByName, userByGoogle);
-                Assert.Same(userByName, userByYahoo);
+                Assert.AreSame(userByName, userByGoogle);
+                Assert.AreSame(userByName, userByYahoo);
             }
-            _session.SaveChangesAsync().Wait();
+            GetSession().SaveChangesAsync().Wait();
         }
     }
 }

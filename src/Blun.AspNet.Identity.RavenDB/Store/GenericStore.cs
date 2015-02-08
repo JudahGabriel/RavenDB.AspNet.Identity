@@ -89,10 +89,17 @@ namespace Blun.AspNet.Identity.RavenDB.Store
         /// Saves changes if <see cref="AutoSaveChanges"/> is 'true'
         /// </summary>
         /// <returns><see cref="Task"/></returns>
-        protected Task SaveChangesAsync()
+        protected async Task SaveChangesAsync()
         {
             base.ThrowIfDisposed();
-            return AutoSaveChanges ? Session.SaveChangesAsync() : Task.FromResult(0);
+            if ( AutoSaveChanges)
+            {
+                await Session.SaveChangesAsync();
+            }
+            else
+            {
+                await Task.FromResult(0);
+            }
         }
 
         /// <summary>

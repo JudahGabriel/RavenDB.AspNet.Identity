@@ -8,23 +8,26 @@ using Blun.AspNet.Identity.RavenDB.Tests.Infrastructure;
 using Blun.AspNet.Identity.RavenDB.Tests.Models;
 using Microsoft.AspNet.Identity;
 using Raven.Client;
-using Xunit;
+using NUnit;
+using NUnit.Framework;
 
-namespace Blun.AspNet.Identity.RavenDB.Tests.Tests
+// ReSharper disable once CheckNamespace
+namespace Blun.AspNet.Identity.RavenDB.Tests
 {
-    public class TestIUserClaimStore : BaseTest
+    [TestFixture]
+    public class TestIUserClaimStore : BaseTest<SimpleUser>
     {
         public TestIUserClaimStore()
         {
             _cleanUpRavenDBAktion = this.ClaenUpRavenDb;
         }
 
-        private void ClaenUpRavenDb()
+        public async Task ClaenUpRavenDb()
         {
-            DeleteUser();
+            await DeleteClaimStore();
         }
 
-        private void CreatUsers()
+        private async Task CreatClaimStore()
         {
             var demo = new SimpleUser()
             {
@@ -39,55 +42,55 @@ namespace Blun.AspNet.Identity.RavenDB.Tests.Tests
                 UserName = "ClaimTest"
             };
 
-            _session.StoreAsync(new SimpleUser() { UserName = "Admin" });
+            await GetSession().StoreAsync(new SimpleUser() { UserName = "Admin" });
             
-            Task.WaitAll();
-            _session.SaveChangesAsync();
-            Task.WaitAll();
+            await GetSession().SaveChangesAsync();
+            
         }
 
-        private void DeleteUser()
+        private async Task DeleteClaimStore()
         {
-            var ids = _session.Query<SimpleUser>().ToListAsync().Result;
+            var ids = await GetSession().Query<SimpleUser>().ToListAsync();
             foreach (var id in ids)
             {
-                _session.Delete<SimpleUser>(id);
+                GetSession().Delete<SimpleUser>(id);
             }
-            _session.SaveChangesAsync();
-            Task.WaitAll();
+            await GetSession().SaveChangesAsync();
         }
 
         #region IUserClaimStore
 
-        public void IUserClaimStore_GetClaimsAsync_Count_4()
+        [Test]
+        public async Task  IUserClaimStore_GetClaimsAsync_Count_4()
         {
             // Arrange
-            const string name = "FindByIdAsync";
-            var user = new SimpleUser()
+            const string name = "IUserClaimStore_GetClaimsAsync_Count_4";
+            var user = await StoreAsync(GetSession(), new SimpleUser()
             {
                 UserName = name
-            };
-            _session.StoreAsync(user).Wait();
-            _session.SaveChangesAsync().Wait();
+            });
             var id = user.Id;
             SimpleUser userResult = null;
 
             // Act
-            using (var mgr = new UserManager<SimpleUser>(new UserStore<SimpleUser, SimpleRole>(_session) { AutoSaveChanges = true }))
+            using (var mgr = new UserManager<SimpleUser>(new UserStore<SimpleUser, SimpleRole>(GetSession()) { AutoSaveChanges = true }))
             {
                 //userResult = mgr.GetClaimsAsync().Result;
             }
 
             // Assert
-            Assert.Null(userResult);
+            Assert.IsNull(userResult);
+
+            // TearDown
+            await base.Delete(GetSession(), user);
         }
 
-        public void IUserClaimStore_AddClaimAsync_True()
+        public async Task  IUserClaimStore_AddClaimAsync_True()
         {
             
         }
 
-        public void IUserClaimStore_RemoveClaimAsync_True()
+        public async Task  IUserClaimStore_RemoveClaimAsync_True()
         {
             
         }
