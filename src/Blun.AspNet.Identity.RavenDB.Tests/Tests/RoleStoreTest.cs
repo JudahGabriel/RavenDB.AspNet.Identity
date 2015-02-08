@@ -1,21 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mime;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Blun.AspNet.Identity.RavenDB.Tests.Infrastructure;
 using Blun.AspNet.Identity.RavenDB.Tests.Models;
 using Microsoft.AspNet.Identity;
-using Raven.Abstractions.Exceptions;
-using Raven.Client;
-using Raven.Client.Extensions;
-using RavenDB.AspNet.Identity;
-using NUnit;
 using NUnit.Framework;
+using Raven.Client;
 using Raven.Client.Linq;
-using Raven.Database.Storage.Voron.Impl;
 
 // ReSharper disable once CheckNamespace
 namespace Blun.AspNet.Identity.RavenDB.Tests

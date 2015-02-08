@@ -15,9 +15,9 @@ using NUnit.Framework;
 namespace Blun.AspNet.Identity.RavenDB.Tests
 {
     [TestFixture]
-    public class TestIUserClaimStore : BaseTest<SimpleUser>
+    public class UserClaimStoreTest : BaseTest<SimpleUser>
     {
-        public TestIUserClaimStore()
+        public UserClaimStoreTest()
         {
             _cleanUpRavenDBAktion = this.ClaenUpRavenDb;
         }

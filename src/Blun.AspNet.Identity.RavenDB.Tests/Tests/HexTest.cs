@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace Blun.AspNet.Identity.RavenDB.Tests
 {
     [TestFixture]
-    public class Hex
+    public class HexTest
     {
         [Test]
         public void Test_Hex_Roundtrip()

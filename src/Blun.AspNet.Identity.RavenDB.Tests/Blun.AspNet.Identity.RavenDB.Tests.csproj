@@ -96,12 +96,20 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Models\SimpleRoleIntKey.cs" />
+    <Compile Include="Tests\UserTwoFactorStoreTest.cs" />
+    <Compile Include="Tests\UserSecurityStampStoreTest.cs" />
+    <Compile Include="Tests\UserRoleStoreTest.cs" />
+    <Compile Include="Tests\UserPhoneNumberStoreTest.cs" />
+    <Compile Include="Tests\UserPasswordStoreTest.cs" />
+    <Compile Include="Tests\UserLoginStoreTest.cs" />
+    <Compile Include="Tests\UserLockoutStoreTest.cs" />
+    <Compile Include="Tests\UserEmailStoreTest.cs" />
     <Compile Include="Tests\RoleStoreTest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Tests\TestIUserClaimStore.cs" />
+    <Compile Include="Tests\UserClaimStoreTest.cs" />
     <Compile Include="Tests\UserStoreTest.cs" />
-    <Compile Include="Tests\Hex.cs" />
+    <Compile Include="Tests\HexTest.cs" />
     <Compile Include="Tests\LoginStoreTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Infrastructure\BaseTest.cs" />

@@ -27,7 +27,6 @@ namespace Blun.AspNet.Identity.RavenDB.Store
                                    IUserRoleStore<TUser, TKey>,
                                    IUserSecurityStampStore<TUser, TKey>,
                                    IUserTwoFactorStore<TUser, TKey>
-
         where TUser : IdentityUser<TKey>
         where TRole : IdentityRole<TKey>
         where TKey : IConvertible, IComparable, IEquatable<TKey>
@@ -518,5 +517,6 @@ namespace Blun.AspNet.Identity.RavenDB.Store
         }
 
         #endregion
+        
     }
 }
