@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Blun.AspNet.Identity.RavenDB</id>
+    <version>1.0.0</version>
+    <title>Blun.AspNet.Identity.RavenDB</title>
+    <authors>Björn Lundström, David Boike</authors>
+    <owners>bjoernlundstroem</owners>
+    <licenseUrl>https://github.com/BLun78/RavenDB.AspNet.Identity/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/BLun78/RavenDB.AspNet.Identity</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>ASP.NET Identity provider for RavenDB</description>
+    <copyright>Copryright 2015 blun.de / Copyright 2013-2014 ILM Professional Services</copyright>
+    <tags>Identity Membership RavenDB Raven NoSQL blun ASP.NET ILM</tags>
+		<dependencies>
+			<dependency id="Microsoft.AspNet.Identity.Core" version="2.1.0" />
+			<dependency id="RavenDB.Client" version="3.0.3528" />
+		</dependencies>
+  </metadata>
+	<files>
+		<file src="ReadMe.txt" />
+	</files>
+</package>

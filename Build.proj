@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<MSBuildCommunityTasksPath>$(MSBuildProjectDirectory)\.build</MSBuildCommunityTasksPath>
+	</PropertyGroup>
+	<Import Project="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.targets" />
+	<!-- Version Number -->
+	<PropertyGroup Condition=" '$(BUILD_NUMBER)' == '' ">
+		<Version>1.0.0.0</Version>
+		<FileVersion>1.0.0.0</FileVersion>
+		<InformationalVersion>1.0.0.0</InformationalVersion>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(BUILD_NUMBER)' != '' ">
+		<!-- Build Server Number -->
+		<Version>1.0.0.0</Version>
+		<FileVersion>$(BUILD_NUMBER)</FileVersion>
+		<InformationalVersion>$(BUILD_NUMBER)</InformationalVersion>
+	</PropertyGroup>
+	<PropertyGroup>
+		<Configuration Condition=" '$(Configuration)'=='' ">Release</Configuration>
+		<BuildDir Condition=" '$(BuildDir)'=='' ">$(MSBuildProjectDirectory)\.build\</BuildDir>
+		<OutDir Condition=" '$(OutDir)'=='' ">$(MSBuildProjectDirectory)\bin\</OutDir>
+		<SourceHome Condition=" '$(SourceHome)'=='' ">$(MSBuildProjectDirectory)\src\</SourceHome>
+		<NuGetDir Condition=" '$(NuGetDir)'=='' ">$(SourceHome).NuGet\</NuGetDir>
+		<NUnitDir Condition=" '$(NUnitDir)'=='' ">$(BuildDir)nunit</NUnitDir>
+	<NuGetPacketProjct Condition=" '$(NuGetPacketProjct)'=='' ">$(SourceHome)Blun.AspNet.Identity.RavenDB\Blun.AspNet.Identity.RavenDB.csproj</NuGetPacketProjct>
+	</PropertyGroup>
+	<Import Project="$(NuGetDir)\NuGet.targets" />
+	<Target Name="Clean">
+		<DeleteTree Directories="**\obj\**;**\bin\**" />
+	</Target>
+	<Target Name="Version">
+		<Time>
+			<Output TaskParameter="Year" PropertyName="Year" />
+		</Time>
+		<Message Text="Version: $(Version)" />
+		<Attrib Files="$(MSBuildProjectDirectory)\src\AssemblyInfoGlobal.cs" ReadOnly="False" />
+		<AssemblyInfo CodeLanguage="CS" OutputFile="$(MSBuildProjectDirectory)\src\AssemblyInfoGlobal.cs" GenerateClass="true" AssemblyCopyright="Copyright © $(Year). All rights reserved." AssemblyConfiguration="$(BuildConfiguration)" AssemblyVersion="$(Version)" AssemblyFileVersion="$(FileVersion)" AssemblyInformationalVersion="$(InformationalVersion)" />
+	</Target>
+	<PropertyGroup>
+		<NUnitResultsFile>$(OutDir)$(Configuration)\nunit-result.xml</NUnitResultsFile>
+	</PropertyGroup>
+	<!-- Projects to Build -->
+	<Target Name="RestorePackages">
+		<Exec Command="&quot;$(NuGetDir)NuGet.exe&quot; restore &quot;%(ProjectFiles.Identity)&quot;" />
+	</Target>
+	<Target Name="BuildNuGetPackage">
+	<Exec Command="&quot;$(NuGetDir)NuGet.exe&quot; pack &quot;$(NuGetPacketProjct)&quot; -Verbose -Prop Configuration=$(Configuration)" />
+	</Target>
+	<ItemGroup>
+		<ProjectFiles Include="$(SourceHome)*.sln">
+				<AdditionalProperties>OutDir=$(OutDir)$(Configuration)\;Configuration=$(Configuration)</AdditionalProperties>
+		</ProjectFiles>
+	</ItemGroup>
+	<Target Name="Compile" DependsOnTargets="Clean;RestorePackages;Version">
+		<MSBuild Projects="@(ProjectFiles)" />
+		<CallTarget Targets="RunTests" />
+	</Target>
+	<Target Name="Build">
+		<CallTarget Targets="Compile" />
+	</Target>
+	<Target Name="RunTests">
+		<CreateItem Include="$(OutDir)$(Configuration)\*.Tests.dll">
+		  <Output TaskParameter="Include" ItemName="TestAssembly" />
+		</CreateItem>
+
+		<Message Text="+++++++++++++++++"/>
+		<Message Text="@(TestAssembly)"/>
+
+		<NUnit 	Assemblies="@(TestAssembly)" 
+			ToolPath="$(NUnitDir)"
+			DisableShadowCopy="true" 
+			Force32Bit="false" 
+			ProjectConfiguration="$(Configuration)"
+            ContinueOnError="false"
+			OutputXmlFile="$(NUnitResultsFile)"
+		/>
+	</Target>
+</Project>
