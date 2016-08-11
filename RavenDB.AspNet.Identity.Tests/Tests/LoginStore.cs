@@ -14,7 +14,7 @@ namespace RavenDB.AspNet.Identity.Tests
     public class LoginStore : BaseTest
     {
         [Fact]
-        public void Can_create_user_and_log_in()
+        public async Task Can_create_user_and_log_in()
         {
             const string username = "DavidBoike";
             const string userId = "user_id_1";
@@ -26,7 +26,7 @@ namespace RavenDB.AspNet.Identity.Tests
 
             using (var docStore = NewDocStore())
             {
-                using (var session = docStore.OpenSession())
+                using (var session = docStore.OpenAsyncSession())
                 {
                     using (var mgr = new UserManager<SimpleAppUser>(new UserStore<SimpleAppUser>(session)))
                     {
@@ -41,7 +41,7 @@ namespace RavenDB.AspNet.Identity.Tests
                         Assert.True(res1.Succeeded);
                         Assert.True(res2.Succeeded);
                     }
-                    session.SaveChanges();
+                    await session.SaveChangesAsync();
                 }
 
                 using (var session = docStore.OpenSession())
@@ -69,7 +69,7 @@ namespace RavenDB.AspNet.Identity.Tests
                     }
                 }
 
-                using (var session = docStore.OpenSession())
+                using (var session = docStore.OpenAsyncSession())
                 {
                     using (var mgr = new UserManager<SimpleAppUser>(new UserStore<SimpleAppUser>(session)))
                     {
@@ -88,7 +88,7 @@ namespace RavenDB.AspNet.Identity.Tests
                         Assert.Same(userByName, userByGoogle);
                         Assert.Same(userByName, userByYahoo);
                     }
-                    session.SaveChanges();
+                    await session.SaveChangesAsync();
                 }
             }
         }
