@@ -10,7 +10,7 @@ public void ConfigureServices(IServiceCollection services)
 	// Add RavenDB and identity.
 	services
 		.AddRavenDb(Configuration.GetConnectionString("RavenDbConnection")) // Create a RavenDB DocumentStore singleton.
-		.AddRavenDbAsyncSession() // Create a RavenDB IASyncDocumentSession for each request.
+		.AddRavenDbAsyncSession() // Create a RavenDB IAsyncDocumentSession for each request.
 		.AddRavenDbIdentity<AppUser>(); // Use Raven for users and roles.
 
 	...
