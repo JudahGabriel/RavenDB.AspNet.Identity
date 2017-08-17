@@ -61,7 +61,11 @@ namespace RavenDB.AspNet.Identity
             }
             if (string.IsNullOrEmpty(user.Id))
             {
-                throw new InvalidOperationException("user.Id property must be specified before calling CreateAsync");
+                var conventions = session.Advanced.DocumentStore.Conventions;
+                var entityName = conventions.GetTypeTagName(typeof(TUser));
+                var separator = conventions.IdentityPartsSeparator;
+                var id = $"{entityName}{separator}{user.Email}";
+                user.Id = id;
             }
 
             await session.StoreAsync(user);
