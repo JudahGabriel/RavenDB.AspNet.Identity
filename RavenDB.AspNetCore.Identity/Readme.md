@@ -1,4 +1,4 @@
-﻿# RavenDB.AspNetCore.Identity #
+﻿# ![RavenDB logo](https://github.com/JudahGabriel/RavenDB.AspNet.Identity/blob/master/RavenDB.AspNet.Identity/nuget-icon.png?raw=true) RavenDB.AspNetCore.Identity #
 An ASP.NET Core Identity provider for RavenDB
 
 ## Instructions ##
