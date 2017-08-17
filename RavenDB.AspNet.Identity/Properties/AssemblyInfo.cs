@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("RavenDB.AspNet.Identity")]
 [assembly: AssemblyDescription("ASP.NET Identity provider for RavenDB")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ILM Professional Services")]
+[assembly: AssemblyCompany("BitShuva")]
 [assembly: AssemblyProduct("RavenDB.AspNet.Identity")]
-[assembly: AssemblyCopyright("Copyright © 2013 ILM Professional Services & David Boike")]
+[assembly: AssemblyCopyright("Copyright © 2017 BitShuva & Judah Gabriel Himango")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,7 +32,7 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.9.0")]
-[assembly: AssemblyFileVersion("0.9.0")]
+[assembly: AssemblyVersion("1.0.2.*")]
+[assembly: AssemblyFileVersion("1.0.2.1")]
 
 [assembly: InternalsVisibleTo("RavenDB.AspNet.Identity.Tests")]

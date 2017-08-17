@@ -60,6 +60,7 @@
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="nuget-icon.png" />
     <Content Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>

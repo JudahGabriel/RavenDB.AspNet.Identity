@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>RavenDB.AspNet.Identity</id>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <title>RavenDB.AspNet.Identity</title>
     <authors>David Boike, Judah Gabriel Himango</authors>
     <owners>judahgabriel</owners>
