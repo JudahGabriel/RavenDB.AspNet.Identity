@@ -11,7 +11,7 @@ public void ConfigureServices(IServiceCollection services)
 	services
 		.AddRavenDb(Configuration.GetConnectionString("RavenDbConnection")) // Create a RavenDB DocumentStore singleton.
 		.AddRavenDbAsyncSession() // Create a RavenDB IAsyncDocumentSession for each request.
-		.AddRavenDbIdentity<AppUser>(); // Use Raven for users and roles.
+		.AddRavenDbIdentity<AppUser>(); // Use Raven for users and roles. AppUser is a simple DTO to hold our user data. See https://github.com/JudahGabriel/RavenDB.AspNet.Identity/blob/master/Sample.Web.NetCore/Models/AppUser.cs
 
 	...
 }
