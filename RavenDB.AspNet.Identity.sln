@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RavenDB.AspNet.Identity", "RavenDB.AspNet.Identity\RavenDB.AspNet.Identity.csproj", "{C147FA58-04F8-4139-9E6E-E3D72F3E30EC}"
 EndProject
@@ -13,6 +13,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{DCA799
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RavenDB.AspNet.Identity.Tests", "RavenDB.AspNet.Identity.Tests\RavenDB.AspNet.Identity.Tests.csproj", "{6B02A46F-AEF3-4800-95EC-93BEE08254CF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RavenDB.AspNetCore.Identity", "RavenDB.AspNetCore.Identity\RavenDB.AspNetCore.Identity.csproj", "{6D951323-429C-460E-8CCA-ECB164D1C1D1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{B730B0AD-FB9B-4768-BC78-B099DD77A876}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Web.NetCore", "Sample.Web.NetCore\Sample.Web.NetCore.csproj", "{BAF1679A-0D3F-4373-B3E4-7C1C78EFF3E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,8 +34,22 @@ Global
 		{6B02A46F-AEF3-4800-95EC-93BEE08254CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B02A46F-AEF3-4800-95EC-93BEE08254CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B02A46F-AEF3-4800-95EC-93BEE08254CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D951323-429C-460E-8CCA-ECB164D1C1D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D951323-429C-460E-8CCA-ECB164D1C1D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D951323-429C-460E-8CCA-ECB164D1C1D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D951323-429C-460E-8CCA-ECB164D1C1D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAF1679A-0D3F-4373-B3E4-7C1C78EFF3E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAF1679A-0D3F-4373-B3E4-7C1C78EFF3E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAF1679A-0D3F-4373-B3E4-7C1C78EFF3E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAF1679A-0D3F-4373-B3E4-7C1C78EFF3E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BAF1679A-0D3F-4373-B3E4-7C1C78EFF3E2} = {B730B0AD-FB9B-4768-BC78-B099DD77A876}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {10F0E164-7506-4DA6-92BE-EA5E531FC11D}
 	EndGlobalSection
 EndGlobal
