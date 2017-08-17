@@ -36,6 +36,7 @@ namespace RavenDB.AspNet.Identity
         public UserStore(IAsyncDocumentSession session)
         {
             this._session = session;
+            this._session.Advanced.DocumentStore.Conventions.RegisterIdConvention<IdentityUser>((dbname, commands, user) => "IdentityUsers/" + user.Id);
         }
 
         private IAsyncDocumentSession session
