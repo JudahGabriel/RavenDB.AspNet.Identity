@@ -61,7 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="nuget-icon.png" />
-    <Content Include="ReadMe.txt" />
+    <None Include="ReadMe.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -3,5 +3,5 @@
 RavenDB.AspNet.Identity  
 ASP.NET Identity Provider for RaveNDB
 
-Coypright 2013 [ILM Professional Services](http://www.ilmservices.com)  
-Created by [David Boike](http://www.make-awesome.com)
+Coypright 2017 BitShuva
+Created by [Judah Gabriel Himango](http://github.com/judahgabriel)
