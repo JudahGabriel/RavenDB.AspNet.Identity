@@ -19,6 +19,6 @@
 		</dependencies>
   </metadata>
 	<files>
-		<file src="ReadMe.md" />
+		<file src="../ReadMe.md" />
 	</files>
 </package>
