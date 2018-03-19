@@ -36,7 +36,7 @@ namespace RavenDB.AspNet.Identity
         public UserStore(IAsyncDocumentSession session)
         {
             this._session = session;
-            this._session.Advanced.DocumentStore.Conventions.RegisterIdConvention<IdentityUser>((dbname, commands, user) => "IdentityUsers/" + user.Id);
+            //this._session.Advanced.DocumentStore.Conventions.RegisterIdConvention<IdentityUser>((dbname, commands, user) => "IdentityUsers/" + user.Id);
         }
 
         private IAsyncDocumentSession session
@@ -46,7 +46,7 @@ namespace RavenDB.AspNet.Identity
                 if (_session == null)
                 {
                     _session = getSessionFunc();
-                    _session.Advanced.DocumentStore.Conventions.RegisterIdConvention<IdentityUser>((dbname, commands, user) => "IdentityUsers/" + user.Id);
+                    //_session.Advanced.DocumentStore.Conventions.RegisterIdConvention<IdentityUser>((dbname, commands, user) => "IdentityUsers/" + user.Id);
                 }
                 return _session;
             }
