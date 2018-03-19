@@ -33,6 +33,7 @@ These instructions assume you know how to set up RavenDB within an MVC applicati
 	app.CreatePerOwinContext(() => raven.OpenAsyncSession());
 6. Add a RavenController base class. 
 	* This will save changes on the document session if the controller action executed successfully.
+	* You can [view the RavenController.cs sample](https://github.com/JudahGabriel/RavenDB.AspNet.Identity/blob/master/Sample/Controllers/RavenController.cs).
 7. Make AccountController.cs inherit from RavenController
 	public class AccountController : RavenController
 	{
