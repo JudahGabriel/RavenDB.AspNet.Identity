@@ -13,9 +13,7 @@ We're on [NuGet as RavenDB.AspNet.Identity](https://www.nuget.org/packages/Raven
     Install-Package RavenDB.AspNet.Identity
     
 3. In ~/Models/IdentityModels.cs:
-    * Remove the namespace: Microsoft.AspNet.Identity.EntityFramework
-    * Add the namespace: Raven.AspNet.Identity
-    * Remove the entire ApplicationDbContext class. You don't need that!
+    * Remove the entire ApplicationDbContext class.
 4. In ~/App_Start/IdentityConfig.cs
     * Update the ApplicationUserManager.Create method to get the Raven document session.
    
