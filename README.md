@@ -20,22 +20,28 @@ These instructions assume you know how to set up RavenDB within an MVC applicati
 4. In ~/App_Start/IdentityConfig.cs
     * Update the ApplicationUserManager.Create method to get the Raven document session.
    
+    ```csharp
     public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
 	{
 		// Update this line to pass in the Raven document session:
 		var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<IAsyncDocumentSession>()));
 		...
 	}
+	```
 5. In ~/App_Start/Startup.Auth.cs:
 	* Remove the Entity framework context and add a RavenDB context:
+	```csharp
 	// Old: app.CreatePerOwinContext(ApplicationDbContext.Create);
 	// New. The raven variable is your Raven DocumentStore singleton.
 	app.CreatePerOwinContext(() => raven.OpenAsyncSession());
+	```
 6. Add a RavenController base class. 
 	* This will save changes on the document session if the controller action executed successfully.
 	* You can [view the RavenController.cs sample](https://github.com/JudahGabriel/RavenDB.AspNet.Identity/blob/master/Sample/Controllers/RavenController.cs).
 7. Make AccountController.cs inherit from RavenController
+	```csharp
 	public class AccountController : RavenController
 	{
 		...
 	}
+	```
