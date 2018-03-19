@@ -8,12 +8,14 @@ We're on [NuGet as RavenDB.AspNet.Identity](https://www.nuget.org/packages/Raven
 1. Create a new ASP.NET MVC 5 project, choosing the Individual User Accounts authentication type.
 2. Remove the Entity Framework packages and replace with RavenDB Identity:
  
-    Uninstall-Package Microsoft.AspNet.Identity.EntityFramework
-    Uninstall-Package EntityFramework
-    Install-Package RavenDB.AspNet.Identity
+    * Uninstall-Package Microsoft.AspNet.Identity.EntityFramework
+    * Uninstall-Package EntityFramework
+    * Install-Package RavenDB.AspNet.Identity
     
 3. In ~/Models/IdentityModels.cs:
-    * Remove the entire ApplicationDbContext class.
+    * Remove the namespace: Microsoft.AspNet.Identity.EntityFramework
+    * Add the namespace: Raven.AspNet.Identity
+    * Remove the entire ApplicationDbContext class. You don't need that!
 4. In ~/App_Start/IdentityConfig.cs
     * Update the ApplicationUserManager.Create method to get the Raven document session.
    
