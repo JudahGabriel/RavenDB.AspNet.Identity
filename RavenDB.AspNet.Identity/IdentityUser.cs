@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 
-namespace RavenDB.AspNet.Identity
+namespace Raven.AspNet.Identity
 {
     public class IdentityUser : IUser
     {

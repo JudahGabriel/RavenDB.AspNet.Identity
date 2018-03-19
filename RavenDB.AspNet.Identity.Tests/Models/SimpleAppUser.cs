@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RavenDB.AspNet.Identity;
+using Raven.AspNet.Identity;
 
-namespace RavenDB.AspNet.Identity.Tests
+namespace Raven.AspNet.Identity.Tests
 {
     public class SimpleAppUser : IdentityUser
     {

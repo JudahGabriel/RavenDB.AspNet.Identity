@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
-using RavenDB.AspNet.Identity;
+using Raven.AspNet.Identity;
 using Xunit;
 using Xunit.Extensions;
-using Util = RavenDB.AspNet.Identity.Util;
+using Util = Raven.AspNet.Identity.Util;
 
-namespace RavenDB.AspNet.Identity.Tests
+namespace Raven.AspNet.Identity.Tests
 {
     public class LoginStore : BaseTest
     {

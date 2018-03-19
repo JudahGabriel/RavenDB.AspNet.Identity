@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections;
+﻿using Microsoft.AspNet.Identity;
+using Raven.Client.Documents;
+using Raven.Client.Documents.Session;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
-using Raven.Client;
 
-namespace RavenDB.AspNet.Identity
+namespace Raven.AspNet.Identity
 {
     public class UserStore<TUser> : 
         IUserStore<TUser>, 
@@ -62,7 +60,7 @@ namespace RavenDB.AspNet.Identity
             if (string.IsNullOrEmpty(user.Id))
             {
                 var conventions = session.Advanced.DocumentStore.Conventions;
-                var entityName = conventions.GetTypeTagName(typeof(TUser));
+                var entityName = conventions.GetCollectionName(typeof(TUser));
                 var separator = conventions.IdentityPartsSeparator;
                 var id = $"{entityName}{separator}{user.Email}";
                 user.Id = id;
@@ -355,8 +353,7 @@ namespace RavenDB.AspNet.Identity
             }
 
             return session.Query<TUser>()
-                .Where(u => u.Email == email)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(u => u.Email == email);
         }
 
         public Task<string> GetEmailAsync(TUser user)

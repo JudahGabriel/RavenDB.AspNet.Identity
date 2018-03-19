@@ -1,5 +1,5 @@
 ﻿# ![RavenDB logo](https://github.com/JudahGabriel/RavenDB.Identity/blob/master/RavenDB.Identity/nuget-icon.png?raw=true) RavenDB.AspNet.Identity #
-RavenDB identity provider for ASP.NET MVC 5+ and Web API 2+. (Looking for a .NET Core identity provider for Raven? Check out our [sister project](https://github.com/JudahGabriel/RavenDB.Identity).)
+RavenDB identity provider for ASP.NET MVC 5+ and Web API 2+. (Looking for .NET Core identity provider for RavenDB? Check out our [sister project, RavenDB.Identity](https://github.com/JudahGabriel/RavenDB.Identity).)
 
 We're on [NuGet as RavenDB.AspNet.Identity](https://www.nuget.org/packages/RavenDB.AspNet.Identity/).
 
@@ -15,14 +15,26 @@ These instructions assume you know how to set up RavenDB within an MVC applicati
     
 3. In ~/Models/IdentityModels.cs:
     * Remove the namespace: Microsoft.AspNet.Identity.EntityFramework
-    * Add the namespace: RavenDB.AspNet.Identity
+    * Add the namespace: Raven.AspNet.Identity
     * Remove the entire ApplicationDbContext class. You don't need that!
-4. In ~/Controllers/AccountController.cs
-    * Remove the namespace: Microsoft.AspNet.Identity.EntityFramework
-    * Replace the UserStore in the constructor, providing a lambda expression to show the UserStore how to get the current IDocumentSession.
+4. In ~/App_Start/IdentityConfig.cs
+    * Update the ApplicationUserManager.Create method to get the Raven document session.
    
-    // This example assumes you have a RavenController base class with public RavenSession property.
-    public AccountController()
-    {
-        this.UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(() => this.RavenSession));
-    }
+    public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
+	{
+		// Update this line to pass in the Raven document session:
+		var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<IAsyncDocumentSession>()));
+		...
+	}
+5. In ~/App_Start/Startup.Auth.cs:
+	* Remove the Entity framework context and add a RavenDB context:
+	// Old: app.CreatePerOwinContext(ApplicationDbContext.Create);
+	// New. The raven variable is your Raven DocumentStore singleton.
+	app.CreatePerOwinContext(() => raven.OpenAsyncSession());
+6. Add a RavenController base class. 
+	* This will save changes on the document session if the controller action executed successfully.
+7. Make AccountController.cs inherit from RavenController
+	public class AccountController : RavenController
+	{
+		...
+	}

@@ -7,9 +7,9 @@ using Microsoft.AspNet.Identity;
 using Raven.Client;
 using Raven.Client.Embedded;
 using Raven.Client.Indexes;
-using RavenDB.AspNet.Identity;
+using Raven.AspNet.Identity;
 
-namespace RavenDB.AspNet.Identity.Tests
+namespace Raven.AspNet.Identity.Tests
 {
     public abstract class BaseTest
     {
