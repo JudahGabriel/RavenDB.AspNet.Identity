@@ -1,4 +1,4 @@
-﻿# ![RavenDB logo](https://github.com/JudahGabriel/RavenDB.Identity/blob/master/RavenDB.Identity/nuget-icon.png?raw=true) RavenDB.AspNet.Identity #
+﻿# <img src="https://github.com/JudahGabriel/RavenDB.Identity/blob/master/RavenDB.Identity/nuget-icon.png?raw=true" width="50" height="50" /> RavenDB.AspNet.Identity #
 RavenDB identity provider for ASP.NET MVC 5+ and Web API 2+. (Looking for .NET Core identity provider for RavenDB? Check out our [sister project, RavenDB.Identity](https://github.com/JudahGabriel/RavenDB.Identity).)
 
 We're on [NuGet as RavenDB.AspNet.Identity](https://www.nuget.org/packages/RavenDB.AspNet.Identity/).
