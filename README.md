@@ -1,4 +1,4 @@
-﻿# ![RavenDB logo](https://github.com/JudahGabriel/RavenDB.Identity/blob/master/RavenDB.Identity/nuget-icon.png?raw=true) RavenDB.AspNet.Identity #
+﻿# <img src="https://github.com/JudahGabriel/RavenDB.Identity/blob/master/RavenDB.Identity/nuget-icon.png?raw=true" width="50" height="50" /> RavenDB.AspNet.Identity #
 RavenDB identity provider for ASP.NET MVC 5+ and Web API 2+. (Looking for .NET Core identity provider for RavenDB? Check out our [sister project, RavenDB.Identity](https://github.com/JudahGabriel/RavenDB.Identity).)
 
 We're on [NuGet as RavenDB.AspNet.Identity](https://www.nuget.org/packages/RavenDB.AspNet.Identity/).
@@ -8,9 +8,9 @@ We're on [NuGet as RavenDB.AspNet.Identity](https://www.nuget.org/packages/Raven
 1. Create a new ASP.NET MVC 5 project, choosing the Individual User Accounts authentication type.
 2. Remove the Entity Framework packages and replace with RavenDB Identity:
  
-    Uninstall-Package Microsoft.AspNet.Identity.EntityFramework
-    Uninstall-Package EntityFramework
-    Install-Package RavenDB.AspNet.Identity
+    * Uninstall-Package Microsoft.AspNet.Identity.EntityFramework
+    * Uninstall-Package EntityFramework
+    * Install-Package RavenDB.AspNet.Identity
     
 3. In ~/Models/IdentityModels.cs:
     * Remove the namespace: Microsoft.AspNet.Identity.EntityFramework
